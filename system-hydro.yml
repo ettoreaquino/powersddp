@@ -1,0 +1,10 @@
+-
+  name: HU1
+  v_max: 100
+  v_min: 20
+  prod: 0.95
+  flow_max: 60
+  inflow_scenarios:
+    - [23,16]
+    - [19,14]
+    - [15,11]
