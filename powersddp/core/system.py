@@ -59,19 +59,49 @@ class PowerSystem(PowerSystemInterface):
     path : str, optional
         Path to the systems.yml file
     data : dict, optional
-        Dictionary containing all of the .
+        Dictionary containing all of the power system parameters, including the generation units.
 
     """
 
     def __init__(self, path: str = None, data: dict = None):
-        self.data = self.load_system(path=path, data=data)
+        """ __init__ method.
+
+        Parameters
+        ----------
+        path : str, optional
+            Path to the systems.yml file.
+        data : :obj:`dict`, optional
+            Description of `param2`. Multiple
+            lines are supported.
+        param3 : :obj:`int`, optional
+            Dictionary containing all of the power system parameters, including the generation units.
+
+        """
+
+        self.load_system(path=path, data=data)
 
     def load_system(self, *, path: str = None, data: dict = None):
+        """Loads a Power System from file or dictionary payload
+
+        A Power System data be loaded from both file or dictionary payload. In case both
+        positional parameters are suplied the file path will have priority and data payload
+        will be ignored.
+
+        PowerSystem loads the data by default during initialization, but can be reloaded ad-hoc.
+
+        Parameters
+        ----------
+        path : str, optional
+            Path to the .yml file containing the system data.
+        data : dict, optional
+            Dictionary containing the structured data of the system.
+
+        """
         if path:
             with open(path, "r") as f:
-                return yaml.load(f, YmlLoader)
+                self.data = yaml.load(f, YmlLoader)
         elif data:
-            return data
+            self.data = data
         else:
             raise ValueError(
                 "load_system() should receive path=str or data=dict as arguments"
