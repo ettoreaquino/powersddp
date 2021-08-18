@@ -27,9 +27,9 @@ There are two ways of initializing a `Power System`. Either by providing a `.yml
 
 ### Initializing a `PowerSystem`
 ```Python
-import powersddp
+import powersddp as psddp
 
-system = powersddp.PowerSystem(path='system.yml')
+system = psddp.PowerSystem(path='system.yml')
 
 print("System Load: {}\n"
       "Number of HGUs: {}\n"
@@ -39,25 +39,23 @@ print("System Load: {}\n"
 ```
 
 ```Python
-import powersddp
+import powersddp as psddp
 
-payload = {'load': [50, 50, 50],
-           'discretizations': 3,
-           'stages': 3,
-           'scenarios': 2,
-           'outage_cost': 500,
-           'hydro-units': [{'name': 'HU1',
-                            'v_max': 100,
-                            'v_min': 20,
-                            'prod': 0.95,
-                            'flow_max': 60,
-                            'inflow_scenarios': [[23, 16],
-                                                 [19, 14],
-                                                 [15, 11]]}],
-          'thermal-units': [{'name': 'GT1', 'capacity': 15, 'cost': 10},
-                            {'name': 'GT2', 'capacity': 10, 'cost': 25}]}
+data = {'load': [50, 50, 50],
+        'discretizations': 3,
+        'stages': 3,
+        'scenarios': 2,
+        'outage_cost': 500,
+        'hydro-units': [{'name': 'HU1',
+                         'v_max': 100,
+                         'v_min': 20,
+                         'prod': 0.95,
+                         'flow_max': 60,
+                         'inflow_scenarios': [[23, 16], [19, 14], [15, 11]]}],
+        'thermal-units': [{'name': 'GT1', 'capacity': 15, 'cost': 10},
+                          {'name': 'GT2', 'capacity': 10, 'cost': 25}]}
 
-system = powersddp.PowerSystem(data=payload)
+PowerSystem = psddp.PowerSystem(data=data)
 
 print("System Load: {}\n"
       "Number of HGUs: {}\n"
@@ -66,4 +64,35 @@ print("System Load: {}\n"
                                   len(system.data['thermal-units'])))
 ```
 
+### Dispatching a `PowerSystem`
+
+#### **dispatch()** accepts the following arguments:
+
+- `verbose : bool, optional defaults to False`
+  - Displays the PDDE solution for every stage of the execution. Use with care, solutions of complex systems with too many stages and scenarios might overflow the console.
+
+- `plot : bool, optional, defaults to False`
+  - Displays a sequence of plots showing the future cost function for every stage of the execution. 
+
+
+```Python
+import powersddp as psddp
+
+data = {'load': [50, 50, 50],
+        'discretizations': 3,
+        'stages': 3,
+        'scenarios': 2,
+        'outage_cost': 500,
+        'hydro-units': [{'name': 'HU1',
+                         'v_max': 100,
+                         'v_min': 20,
+                         'prod': 0.95,
+                         'flow_max': 60,
+                         'inflow_scenarios': [[23, 16], [19, 14], [15, 11]]}],
+        'thermal-units': [{'name': 'GT1', 'capacity': 15, 'cost': 10},
+                          {'name': 'GT2', 'capacity': 10, 'cost': 25}]}
+
+PowerSystem = psddp.PowerSystem(data=data)
+PowerSystem.dispatch()
+```
 <!-- <img src="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1"> -->
