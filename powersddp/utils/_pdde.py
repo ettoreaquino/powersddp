@@ -3,15 +3,22 @@
 
 
 import cvxopt.modeling as model
-import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
 from cvxopt import solvers
 from plotly.subplots import make_subplots
 
+solvers.options["glpk"] = dict(msg_lev="GLP_MSG_OFF")
 
-def solve(system_data: dict, v_i: list, inflow: list, verbose: bool = False):
+def solve(
+    system_data: dict,
+    v_i: list,
+    inflow: list,
+    cuts: list,
+    stage: int,
+    verbose: bool = False,
+):
     """Dual Dynamic Stochastic Programming Solver
 
     Method to abstract the Dual Stochastic Programming solver applied to the power system
@@ -29,8 +36,8 @@ def solve(system_data: dict, v_i: list, inflow: list, verbose: bool = False):
         Dictionary containing the structured data of the system.
     """
 
-    if not verbose:
-        solvers.options["glpk"] = dict(msg_lev="GLP_MSG_OFF")
+    # if not verbose:
+    #     solvers.options["glpk"] = dict(msg_lev="GLP_MSG_OFF")
 
     n_tgu = len(system_data["thermal-units"])
     n_hgu = len(system_data["hydro-units"])
@@ -41,6 +48,7 @@ def solve(system_data: dict, v_i: list, inflow: list, verbose: bool = False):
     v_v = model.variable(n_hgu, "Shed Flow")
     g_t = model.variable(n_tgu, "Power Generated")
     shortage = model.variable(1, "Power Shortage")
+    alpha = model.variable(1, "Future Cost")
 
     ## Objective Function
     objective_function = 0
@@ -49,6 +57,7 @@ def solve(system_data: dict, v_i: list, inflow: list, verbose: bool = False):
     objective_function += system_data["outage_cost"] * shortage[0]
     for i, _ in enumerate(system_data["hydro-units"]):
         objective_function += 0.01 * v_v[i]
+    objective_function += 1.0 * alpha[0]
 
     ## Constraints
     ### Hydro Balance
@@ -66,7 +75,7 @@ def solve(system_data: dict, v_i: list, inflow: list, verbose: bool = False):
 
     supplying += shortage[0]
 
-    constraints.append(supplying == system_data["load"][2])
+    constraints.append(supplying == system_data["load"][stage - 2])
 
     ### Bounds
     for i, hgu in enumerate(system_data["hydro-units"]):
@@ -81,6 +90,16 @@ def solve(system_data: dict, v_i: list, inflow: list, verbose: bool = False):
         constraints.append(g_t[i] <= tgu["capacity"])
 
     constraints.append(shortage[0] >= 0)
+    constraints.append(alpha[0] >= 0)
+
+    ### Cut constraint (Future cost function of forward stage)
+    for cut in cuts:
+        if cut["stage"] == stage:
+            equation = 0
+            for hgu in range(n_hgu):
+                equation += float(cut["coefs"][hgu]) * v_f[hgu]
+            equation += float(cut["coef_b"]) # type: ignore
+            constraints.append(alpha[0] >= equation)
 
     ## Solving
     opt_problem = model.op(objective=objective_function, constraints=constraints)
@@ -90,6 +109,7 @@ def solve(system_data: dict, v_i: list, inflow: list, verbose: bool = False):
     if verbose:
         print("--------------------------------------")
         print("Total Cost: ${}".format(round(objective_function.value()[0], 2)))  # type: ignore
+        print("Future Cost: ${}".format(round(alpha[0].value()[0], 2)))
         print("--------------------------------------")
         for i, hgu in enumerate(system_data["hydro-units"]):
             print(
@@ -125,6 +145,7 @@ def solve(system_data: dict, v_i: list, inflow: list, verbose: bool = False):
         "shortage": shortage[0].value()[0],
         "operational_marginal_cost": constraints[n_hgu].multiplier.value[0],
         "total_cost": objective_function.value()[0],  # type: ignore
+        "future_cost": alpha[0].value()[0],
         "hydro_units": [
             {
                 "v_f": v_f[i].value()[0],
@@ -144,7 +165,7 @@ def plot_future_cost_function(operation: pd.DataFrame):
 
     fig = make_subplots(rows=n_stages, cols=1)
 
-    for i,stage in enumerate(operation["stage"].unique()):
+    for i, stage in enumerate(operation["stage"].unique()):
         stage_df = operation.loc[operation["stage"] == stage]
         fig.add_trace(
             go.Scatter(
@@ -153,7 +174,7 @@ def plot_future_cost_function(operation: pd.DataFrame):
                 mode="lines",
                 name="Stage {}".format(stage),
             ),
-            row=i+1,
+            row=i + 1,
             col=1,
         )
 

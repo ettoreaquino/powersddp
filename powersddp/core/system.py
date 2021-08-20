@@ -138,7 +138,8 @@ class PowerSystem(PowerSystemInterface):
         step = 100 / (self.data["discretizations"] - 1)
         discretizations = list(product(np.arange(0, 100 + step, step), repeat=n_hgu))
 
-        operation = []
+        operation = []  
+        cuts = [] # type: ignore
         for stage in range(self.data["stages"], 0, -1):
             for discretization in discretizations:
 
@@ -152,6 +153,7 @@ class PowerSystem(PowerSystemInterface):
 
                 # For Every Scenario
                 average = 0.0
+                avg_water_marginal_cost = [0 for _ in self.data["hydro-units"]]
                 for scenario in range(self.data["scenarios"]):
                     inflow = []
                     for i, hgu in enumerate(self.data["hydro-units"]):
@@ -164,16 +166,34 @@ class PowerSystem(PowerSystemInterface):
                             )
                         )
                     result = solve(
-                        system_data=self.data, v_i=v_i, inflow=inflow, verbose=verbose
+                        system_data=self.data,
+                        v_i=v_i,
+                        inflow=inflow,
+                        cuts=cuts,
+                        stage=stage + 1,
+                        verbose=verbose,
                     )
                     average += result["total_cost"]
+                    for i, hgu in enumerate(result["hydro_units"]):
+                        avg_water_marginal_cost[i] += hgu["water_marginal_cost"]
 
                 # Calculating the average of the scenarios
                 average = average / self.data["scenarios"]
+                coef_b = average
+                for i, hgu in enumerate(result["hydro_units"]):
+                    # ! Invert the coefficient because of the minimization problem inverts the signal
+                    avg_water_marginal_cost[i] = (
+                        -avg_water_marginal_cost[i] / self.data["scenarios"]
+                    )
+                    coef_b -= v_i[i] * avg_water_marginal_cost[i]
+
+                cuts.append(
+                    {"stage": stage, "coef_b": coef_b, "coefs": avg_water_marginal_cost}
+                )
                 operation.append(
                     {
                         "stage": stage,
-                        "storage_percentage": discretization[i],
+                        "storage_percentage": "{}%".format(int(discretization[i])),
                         "initial_volume": v_i[0],
                         "average_cost": round(average, 2),
                     }
