@@ -1,6 +1,6 @@
 [![PyPI version](https://badge.fury.io/py/powersddp.svg)](https://badge.fury.io/py/powersddp)
 
-# **Power** System **S**tocastic **D**ual **D**ynamic **P**rogramming
+# **Power** System **S**tochastic **D**ual **D**ynamic **P**rogramming
 
 The main goal of this library is to provide support for studies regarding the optimal dispatch of power systems, majorly comprised of Thermoelectric and Hydroelectric Generators.
 
