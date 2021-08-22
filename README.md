@@ -93,6 +93,8 @@ data = {'load': [50, 50, 50],
                           {'name': 'GT2', 'capacity': 10, 'cost': 25}]}
 
 PowerSystem = psddp.PowerSystem(data=data)
-PowerSystem.dispatch()
+operation = PowerSystem.dispatch()
+
+print(operation)
 ```
 <!-- <img src="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1"> -->
