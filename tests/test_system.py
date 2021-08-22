@@ -74,8 +74,8 @@ class TestSystem(TestCase):
             }
 
             System = PowerSystem(data=payload)
-            
-            # Dispatching                
+
+            # Dispatching
             operation = System.dispatch()
 
             # Assert Structure
@@ -83,5 +83,3 @@ class TestSystem(TestCase):
 
             # Assert Values
             self.assertEqual(operation.iloc[0].average_cost, 6725.0)
-
-

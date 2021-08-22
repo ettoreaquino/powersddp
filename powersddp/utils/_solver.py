@@ -12,13 +12,15 @@ from plotly.subplots import make_subplots
 solvers.options["glpk"] = dict(msg_lev="GLP_MSG_OFF")
 
 
-# Unique Linear Programming 
-def ulp(system_data: dict,
+# Unique Linear Programming
+def ulp(
+    system_data: dict,
     v_i: list,
     inflow: list,
     cuts: list,
     stage: int,
-    verbose: bool = False):
+    verbose: bool = False,
+):
     """Unique Linear Programming Solver
 
     Parameters
@@ -34,6 +36,7 @@ def ulp(system_data: dict,
     """
 
     return None
+
 
 # Stochastic Dual Programming
 def sdp(
@@ -125,7 +128,7 @@ def sdp(
             equation = 0
             for hgu in range(n_hgu):
                 equation += float(cut["coefs"][hgu]) * v_f[hgu]
-            equation += float(cut["coef_b"]) # type: ignore
+            equation += float(cut["coef_b"])  # type: ignore
             constraints.append(alpha[0] >= equation)
 
     ## Solving
