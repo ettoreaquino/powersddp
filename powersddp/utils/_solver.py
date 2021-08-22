@@ -11,7 +11,32 @@ from plotly.subplots import make_subplots
 
 solvers.options["glpk"] = dict(msg_lev="GLP_MSG_OFF")
 
-def solve(
+
+# Unique Linear Programming 
+def ulp(system_data: dict,
+    v_i: list,
+    inflow: list,
+    cuts: list,
+    stage: int,
+    verbose: bool = False):
+    """Unique Linear Programming Solver
+
+    Parameters
+    ----------
+    system_data : dict,
+        Dict containing data structured as used to instantiate a PowerSystem.
+    v_i : list
+        List containing the initial volume of the Hydro Units, for each
+    v_i : list
+        List containing the inflow to the Hydro Units
+    verbose : bool, optional
+        Dictionary containing the structured data of the system.
+    """
+
+    return None
+
+# Stochastic Dual Programming
+def sdp(
     system_data: dict,
     v_i: list,
     inflow: list,
@@ -19,7 +44,7 @@ def solve(
     stage: int,
     verbose: bool = False,
 ):
-    """Dual Dynamic Stochastic Programming Solver
+    """Stochastic Dual Programming Solver
 
     Method to abstract the Dual Stochastic Programming solver applied to the power system
     problem.
@@ -34,10 +59,12 @@ def solve(
         List containing the inflow to the Hydro Units
     verbose : bool, optional
         Dictionary containing the structured data of the system.
-    """
 
-    # if not verbose:
-    #     solvers.options["glpk"] = dict(msg_lev="GLP_MSG_OFF")
+    Returns
+    -------
+    operation : dict
+        A dictionary representing the operation
+    """
 
     n_tgu = len(system_data["thermal-units"])
     n_hgu = len(system_data["hydro-units"])

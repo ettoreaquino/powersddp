@@ -36,7 +36,9 @@ import pandas as pd
 import yaml
 
 from powersddp.utils._yml import YmlLoader
-from powersddp.utils._pdde import solve, plot_future_cost_function
+from powersddp.utils._solver import (
+    sdp,
+    plot_future_cost_function)
 
 
 class PowerSystemInterface(ABC):
@@ -111,7 +113,7 @@ class PowerSystem(PowerSystemInterface):
                 "load_system() should receive path=str or data=dict as arguments"
             )
 
-    def dispatch(self, *, plot: bool = False, verbose: bool = False) -> pd.DataFrame:
+    def dispatch(self, *, solver:str='sdp', plot: bool = False, verbose: bool = False) -> pd.DataFrame:
         """Solves a financial dispatch of a Power System class
 
         Once instantiated a Power System can deploy the generation units based on the
@@ -165,7 +167,7 @@ class PowerSystem(PowerSystemInterface):
                                 stage, int(discretization[0]), scenario
                             )
                         )
-                    result = solve(
+                    result = sdp(
                         system_data=self.data,
                         v_i=v_i,
                         inflow=inflow,
