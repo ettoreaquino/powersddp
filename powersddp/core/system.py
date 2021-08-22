@@ -111,7 +111,7 @@ class PowerSystem(PowerSystemInterface):
                 "load_system() should receive path=str or data=dict as arguments"
             )
 
-    def dispatch(self, *, plot: bool = False, verbose: bool = False):
+    def dispatch(self, *, plot: bool = False, verbose: bool = False) -> pd.DataFrame:
         """Solves a financial dispatch of a Power System class
 
         Once instantiated a Power System can deploy the generation units based on the
