@@ -6,6 +6,8 @@ authors = ["Ettore Aquino <ettore@ettoreaquino.com>"]
 
 repository = "https://github.com/ettoreaquino/powersddp.git"
 
+readme = "README.md"
+
 exclude = ["Makefile","README.rst","Notebook.ipynb"]
 
 [tool.poetry.dependencies]
