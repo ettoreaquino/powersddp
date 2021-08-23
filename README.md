@@ -1,6 +1,6 @@
 [![PyPI version](https://badge.fury.io/py/powersddp.svg)](https://badge.fury.io/py/powersddp)
 
-# **Power** System **S**tocastic **D**ual **D**ynamic **P**rogramming
+# **Power** System **S**tochastic **D**ual **D**ynamic **P**rogramming
 
 The main goal of this library is to provide support for studies regarding the optimal dispatch of power systems, majorly comprised of Thermoelectric and Hydroelectric Generators.
 
@@ -59,9 +59,9 @@ PowerSystem = psddp.PowerSystem(data=data)
 
 print("System Load: {}\n"
       "Number of HGUs: {}\n"
-      "Number of TGUs: {}".format(system.data['load'],
-                                  len(system.data['hydro-units']),
-                                  len(system.data['thermal-units'])))
+      "Number of TGUs: {}".format(PowerSystem.data['load'],
+                                  len(PowerSystem.data['hydro-units']),
+                                  len(PowerSystem.data['thermal-units'])))
 ```
 
 ### Dispatching a `PowerSystem`
