@@ -59,9 +59,9 @@ PowerSystem = psddp.PowerSystem(data=data)
 
 print("System Load: {}\n"
       "Number of HGUs: {}\n"
-      "Number of TGUs: {}".format(system.data['load'],
-                                  len(system.data['hydro-units']),
-                                  len(system.data['thermal-units'])))
+      "Number of TGUs: {}".format(PowerSystem.data['load'],
+                                  len(PowerSystem.data['hydro-units']),
+                                  len(PowerSystem.data['thermal-units'])))
 ```
 
 ### Dispatching a `PowerSystem`
