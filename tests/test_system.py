@@ -30,6 +30,7 @@ class TestSystem(TestCase):
                         "name": "HU1",
                         "v_max": 100,
                         "v_min": 20,
+                        "v_ini": 100,
                         "prod": 0.95,
                         "flow_max": 60,
                         "inflow_scenarios": [[23, 16], [19, 14], [15, 11]],
@@ -49,7 +50,7 @@ class TestSystem(TestCase):
             self.assertTrue(System.data["load"] == [50, 50, 50])
             self.assertTrue(System.data["hydro-units"][0]["name"] == "HU1")
 
-    def test_PowerSystem_should_dispatch(self):
+    def test_PowerSystem_should_dispatch_sdp(self):
         with self.subTest():
             payload = {
                 "load": [50, 50, 50],
@@ -83,3 +84,41 @@ class TestSystem(TestCase):
 
             # Assert Values
             self.assertEqual(operation.iloc[0].average_cost, 6725.0)
+
+    def test_PowerSystem_should_dispatch_ulp(self):
+        with self.subTest():
+            payload = {
+                "load": [50, 50, 50],
+                "discretizations": 3,
+                "stages": 3,
+                "scenarios": 2,
+                "outage_cost": 500,
+                "hydro-units": [
+                    {
+                        "name": "HU1",
+                        "v_max": 100,
+                        "v_min": 20,
+                        "v_ini": 100,
+                        "prod": 0.95,
+                        "flow_max": 60,
+                        "inflow_scenarios": [[23, 16], [19, 14], [15, 11]],
+                    }
+                ],
+                "thermal-units": [
+                    {"name": "GT1", "capacity": 15, "cost": 10},
+                    {"name": "GT2", "capacity": 10, "cost": 25},
+                ],
+            }
+
+            System = PowerSystem(data=payload)
+
+            # Dispatching
+            operation = System.dispatch(solver="ulp")
+
+            # Assert Structure
+            self.assertEqual(type(operation), dict)
+            self.assertEqual(type(operation["hydro-units"]), pd.DataFrame)
+            self.assertEqual(type(operation["thermal-units"]), pd.DataFrame)
+    #
+    #         # Assert Values
+    #         self.assertEqual(operation["total_cost"], 198.5)

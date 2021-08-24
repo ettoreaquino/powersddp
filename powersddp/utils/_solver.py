@@ -15,10 +15,7 @@ solvers.options["glpk"] = dict(msg_lev="GLP_MSG_OFF")
 # Unique Linear Programming
 def ulp(
     system_data: dict,
-    v_i: list,
-    inflow: list,
-    cuts: list,
-    stage: int,
+    scenario: int = 0,
     verbose: bool = False,
 ):
     """Unique Linear Programming Solver
@@ -27,15 +24,172 @@ def ulp(
     ----------
     system_data : dict,
         Dict containing data structured as used to instantiate a PowerSystem.
-    v_i : list
-        List containing the initial volume of the Hydro Units, for each
-    v_i : list
-        List containing the inflow to the Hydro Units
+    scenario: int,
+        Inflow scenario index.
     verbose : bool, optional
         Dictionary containing the structured data of the system.
+
+    Returns
+    -------
+    operation : dict
+        A dictionary representing the operation
     """
 
-    return None
+    n_tgu = len(system_data["thermal-units"])
+    n_hgu = len(system_data["hydro-units"])
+
+    ## Initializing Model Variables
+    v_f = list()
+    v_t = list()
+    v_v = list()
+    g_t = list()
+    ### Hydro-Units
+    for _, hgu in enumerate(system_data["hydro-units"]):
+        v_f.append(
+            model.variable(
+                system_data["stages"],
+                "{} Final Volume".format(hgu["name"]),
+            )
+        )
+        v_t.append(
+            model.variable(
+                system_data["stages"],
+                "{} Turbined Flow".format(hgu["name"]),
+            )
+        )
+        v_v.append(
+            model.variable(
+                system_data["stages"],
+                "{} Shed Flow".format(hgu["name"]),
+            )
+        )
+    ### Thermal-Units
+    for _, tgu in enumerate(system_data["thermal-units"]):
+        g_t.append(
+            model.variable(
+                system_data["stages"],
+                "{} Power Generated".format(tgu["name"]),
+            )
+        )
+    ### Shortage
+    shortage = model.variable(system_data["stages"], "Power Shortage")
+
+    ## Objective Function
+    objective_function = 0
+    for stage in range(system_data["stages"]):
+        objective_function += system_data["outage_cost"] * shortage[0]
+        for i, tgu in enumerate(system_data["thermal-units"]):
+            objective_function += tgu["cost"] * g_t[i][stage]
+        for i, _ in enumerate(system_data["hydro-units"]):
+            objective_function += 0.01 * v_v[i][stage]
+
+    ## Constraints
+    ### Hydro Balance
+    constraints = []
+    for i, hgu in enumerate(system_data["hydro-units"]):
+        for stage in range(system_data["stages"]):
+            if stage == 0:
+                constraints.append(
+                    v_f[i][stage]
+                    == float(hgu["v_ini"])
+                    + float(hgu["inflow_scenarios"][stage][scenario])
+                    - v_t[i][stage]
+                    - v_v[i][stage]
+                )
+            else:
+                constraints.append(
+                    v_f[i][stage]
+                    == v_f[i][stage - 1]
+                    + float(hgu["inflow_scenarios"][stage][scenario])
+                    - v_t[i][stage]
+                    - v_v[i][stage]
+                )
+    ### Load Supply
+    for stage in range(system_data["stages"]):
+        load_supply = 0
+        for i, hgu in enumerate(system_data["hydro-units"]):
+            load_supply += hgu["prod"] * v_t[i][stage]
+        for i, _ in enumerate(system_data["thermal-units"]):
+            load_supply += g_t[i][stage]
+        load_supply += shortage[stage]
+        constraints.append(load_supply == system_data["load"][stage])
+    ### Bounds
+    for i, hgu in enumerate(system_data["hydro-units"]):
+        constraints.append(v_f[i] >= hgu["v_min"])
+        constraints.append(v_f[i] <= hgu["v_max"])
+        constraints.append(v_t[i] >= 0)
+        constraints.append(v_t[i] <= hgu["flow_max"])
+        constraints.append(v_v[i] >= 0)
+    for i, tgu in enumerate(system_data["thermal-units"]):
+        constraints.append(g_t[i] >= 0)
+        constraints.append(g_t[i] <= tgu["capacity"])
+    constraints.append(shortage[0] >= 0)
+
+    ## Solving
+    opt_problem = model.op(objective=objective_function, constraints=constraints)
+    opt_problem.solve(format="dense", solver="glpk")
+
+    ## Print
+    if verbose:
+        print("--------------------------------------")
+        print("Total Cost (All stages): ${}".format(round(objective_function.value()[0], 2)))  # type: ignore
+        print("--------------------------------------")
+        for i, hgu in enumerate(system_data["hydro-units"]):
+            print(
+                "{} | {:>15s}: {:>7.2f} hm3".format(
+                    hgu["name"], v_f.name, v_f[i].value()[0]
+                )
+            )
+            print(
+                "{} | {:>15s}: {:>7.2f} hm3".format(
+                    hgu["name"], v_t.name, v_t[i].value()[0]
+                )
+            )
+            print(
+                "{} | {:>15s}: {:>7.2f} hm3".format(
+                    hgu["name"], v_v.name, v_v[i].value()[0]
+                )
+            )
+            print(
+                "{} | {:>15s}: {:>7.2f} $/hm3".format(
+                    hgu["name"], "Water Cost", constraints[i].multiplier.value[0]
+                )
+            )
+            print("--------------------------------------")
+
+        for i, tgu in enumerate(system_data["thermal-units"]):
+            print(
+                "{} | {}: {:>7.2f} MWmed".format(
+                    tgu["name"], g_t.name, g_t[i].value()[0]
+                )
+            )
+            print("--------------------------------------")
+
+        print(
+            """{}: {:.2f} MWmed\nMarginal Cost: {:.2f}\n======================================\n
+        """.format(
+                shortage.name,
+                shortage[0].value()[0],
+                constraints[n_hgu].multiplier.value[0],
+            )
+        )
+
+    return {
+        "total_cost": objective_function.value()[0],  # type: ignore
+        "operational_marginal_cost": constraints[n_hgu].multiplier.value[0],
+        "shortage": shortage[0].value()[0],
+        "hydro_units": pd.DataFrame(
+            [
+            {
+                "v_f": v_f[i].value()[0],
+                "v_t": v_t[i].value()[0],
+                "v_v": v_v[i].value()[0],
+                "water_marginal_cost": constraints[i].multiplier.value[0],
+            }
+            for i in range(n_hgu)
+        ]),
+        "thermal_units": pd.DataFrame([{"g_t": g_t[i].value()[0]} for i in range(n_tgu)]),
+    }
 
 
 # Stochastic Dual Programming
@@ -57,10 +211,14 @@ def sdp(
     system_data : dict,
         Dict containing data structured as used to instantiate a PowerSystem.
     v_i : list
-        List containing the initial volume of the Hydro Units, for each
-    v_i : list
-        List containing the inflow to the Hydro Units
-    verbose : bool, optional
+        List containing the initial volume of the Hydro Units, for each unit.
+    inflow : list,
+        List containing the inflow to the Hydro Units, for each unit.
+    cuts : list,
+        List containing the overall result of the stage analyzed.
+    stage : int,
+        Int-value containing the stage information to be analyzed.
+    verbose : bool, optional,
         Dictionary containing the structured data of the system.
 
     Returns
@@ -143,23 +301,33 @@ def sdp(
         print("--------------------------------------")
         for i, hgu in enumerate(system_data["hydro-units"]):
             print(
-                "HGU {} | {:>15s}: {:>7.2f} hm3".format(i, v_f.name, v_f[i].value()[0])
+                "{} | {:>15s}: {:>7.2f} hm3".format(
+                    hgu["name"], v_f.name, v_f[i].value()[0]
+                )
             )
             print(
-                "HGU {} | {:>15s}: {:>7.2f} hm3".format(i, v_t.name, v_t[i].value()[0])
+                "{} | {:>15s}: {:>7.2f} hm3".format(
+                    hgu["name"], v_t.name, v_t[i].value()[0]
+                )
             )
             print(
-                "HGU {} | {:>15s}: {:>7.2f} hm3".format(i, v_v.name, v_v[i].value()[0])
+                "{} | {:>15s}: {:>7.2f} hm3".format(
+                    hgu["name"], v_v.name, v_v[i].value()[0]
+                )
             )
             print(
-                "HGU {} | {:>15s}: {:>7.2f} $/hm3".format(
-                    i, "Water Cost", constraints[i].multiplier.value[0]
+                "{} | {:>15s}: {:>7.2f} $/hm3".format(
+                    hgu["name"], "Water Cost", constraints[i].multiplier.value[0]
                 )
             )
             print("--------------------------------------")
 
         for i, tgu in enumerate(system_data["thermal-units"]):
-            print("TGU {} | {}: {:>7.2f} MWmed".format(i, g_t.name, g_t[i].value()[0]))
+            print(
+                "{} | {}: {:>7.2f} MWmed".format(
+                    hgu["name"], g_t.name, g_t[i].value()[0]
+                )
+            )
             print("--------------------------------------")
 
         print(
@@ -172,19 +340,20 @@ def sdp(
         )
 
     return {
-        "shortage": shortage[0].value()[0],
-        "operational_marginal_cost": constraints[n_hgu].multiplier.value[0],
         "total_cost": objective_function.value()[0],  # type: ignore
         "future_cost": alpha[0].value()[0],
-        "hydro_units": [
-            {
-                "v_f": v_f[i].value()[0],
-                "v_t": v_t[i].value()[0],
-                "v_v": v_v[i].value()[0],
-                "water_marginal_cost": constraints[i].multiplier.value[0],
-            }
-            for i in range(n_hgu)
-        ],
+        "operational_marginal_cost": constraints[n_hgu].multiplier.value[0],
+        "shortage": shortage[0].value()[0],
+        "hydro_units":
+            [
+                {
+                    "v_f": v_f[i].value()[0],
+                    "v_t": v_t[i].value()[0],
+                    "v_v": v_v[i].value()[0],
+                    "water_marginal_cost": constraints[i].multiplier.value[0],
+                }
+                for i in range(n_hgu)
+            ],
         "thermal_units": [{"g_t": g_t[i].value()[0]} for i in range(n_tgu)],
     }
 
