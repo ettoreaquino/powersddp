@@ -7,8 +7,8 @@ discretizations: int
 stages: int
 scenarios: int
 outage_cost: float
-hydro-units: !include system-hydro.yml
-thermal-units: !include system-thermal.yml
+hydro_units: !include system-hydro.yml
+thermal_units: !include system-thermal.yml
 
 # system-hydro.yml
 -
@@ -137,7 +137,7 @@ class PowerSystem(PowerSystemInterface):
         """
 
         if solver == "sdp":
-            n_hgu = len(self.data["hydro-units"])
+            n_hgu = len(self.data["hydro_units"])
 
             step = 100 / (self.data["discretizations"] - 1)
             discretizations = list(
@@ -151,7 +151,7 @@ class PowerSystem(PowerSystemInterface):
 
                     v_i = []
                     # For Every Hydro Unit
-                    for i, hgu in enumerate(self.data["hydro-units"]):
+                    for i, hgu in enumerate(self.data["hydro_units"]):
                         v_i.append(
                             hgu["v_min"]
                             + (hgu["v_max"] - hgu["v_min"]) * discretization[i] / 100
@@ -159,10 +159,10 @@ class PowerSystem(PowerSystemInterface):
 
                     # For Every Scenario
                     average = 0.0
-                    avg_water_marginal_cost = [0 for _ in self.data["hydro-units"]]
+                    avg_water_marginal_cost = [0 for _ in self.data["hydro_units"]]
                     for scenario in range(self.data["scenarios"]):
                         inflow = []
-                        for i, hgu in enumerate(self.data["hydro-units"]):
+                        for i, hgu in enumerate(self.data["hydro_units"]):
                             inflow.append(hgu["inflow_scenarios"][stage - 1][scenario])
 
                         if verbose:
@@ -216,4 +216,4 @@ class PowerSystem(PowerSystemInterface):
             return operation_df
 
         elif solver == "ulp":
-            return ulp(system_data=self.data, verbose=verbose)
+            return ulp(system_data=self.data, scenario=0, verbose=verbose)

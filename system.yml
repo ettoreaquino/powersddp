@@ -3,5 +3,5 @@ discretizations: 3
 stages: 3
 scenarios: 2
 outage_cost: 500
-hydro-units: !include system-hydro.yml
-thermal-units: !include system-thermal.yml
+hydro_units: !include system-hydro.yml
+thermal_units: !include system-thermal.yml
