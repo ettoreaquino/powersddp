@@ -177,3 +177,6 @@ Thumbs.db
 
 # Other files
 *.gif
+
+# Project specific
+main.py

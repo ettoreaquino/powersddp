@@ -77,7 +77,7 @@ def ulp(
     ## Objective Function
     objective_function = 0
     for stage in range(system_data["stages"]):
-        objective_function += system_data["outage_cost"] * shortage[0]
+        objective_function += system_data["outage_cost"] * shortage[stage]
         for i, tgu in enumerate(system_data["thermal-units"]):
             objective_function += tgu["cost"] * g_t[i][stage]
         for i, _ in enumerate(system_data["hydro-units"]):
@@ -135,35 +135,37 @@ def ulp(
         print("Total Cost (All stages): ${}".format(round(objective_function.value()[0], 2)))  # type: ignore
         print("--------------------------------------")
         for i, hgu in enumerate(system_data["hydro-units"]):
-            print(
-                "{} | {:>15s}: {:>7.2f} hm3".format(
-                    hgu["name"], v_f.name, v_f[i].value()[0]
+            for stage in range(system_data["stages"]):
+                print(
+                    "{} | {:>15s}: {:>7.2f} hm3".format(
+                        hgu["name"], v_f[i].name, v_f[i][stage].value()[0]
+                    )
                 )
-            )
-            print(
-                "{} | {:>15s}: {:>7.2f} hm3".format(
-                    hgu["name"], v_t.name, v_t[i].value()[0]
+                print(
+                    "{} | {:>15s}: {:>7.2f} hm3".format(
+                        hgu["name"], v_t[i].name, v_t[i][stage].value()[0]
+                    )
                 )
-            )
-            print(
-                "{} | {:>15s}: {:>7.2f} hm3".format(
-                    hgu["name"], v_v.name, v_v[i].value()[0]
+                print(
+                    "{} | {:>15s}: {:>7.2f} hm3".format(
+                        hgu["name"], v_v[i].name, v_v[i][stage].value()[0]
+                    )
                 )
-            )
-            print(
-                "{} | {:>15s}: {:>7.2f} $/hm3".format(
-                    hgu["name"], "Water Cost", constraints[i].multiplier.value[0]
+                print(
+                    "{} | {:>15s}: {:>7.2f} $/hm3".format(
+                        hgu["name"], "Water Cost", constraints[i].multiplier.value[0]
+                    )
                 )
-            )
-            print("--------------------------------------")
+                print("--------------------------------------")
 
         for i, tgu in enumerate(system_data["thermal-units"]):
-            print(
-                "{} | {}: {:>7.2f} MWmed".format(
-                    tgu["name"], g_t.name, g_t[i].value()[0]
+            for stage in range(system_data["stages"]):
+                print(
+                    "{} | {}: {:>7.2f} MWmed".format(
+                        tgu["name"], g_t[i].name, g_t[i][stage].value()[0]
+                    )
                 )
-            )
-            print("--------------------------------------")
+                print("--------------------------------------")
 
         print(
             """{}: {:.2f} MWmed\nMarginal Cost: {:.2f}\n======================================\n
@@ -178,17 +180,17 @@ def ulp(
         "total_cost": objective_function.value()[0],  # type: ignore
         "operational_marginal_cost": constraints[n_hgu].multiplier.value[0],
         "shortage": shortage[0].value()[0],
-        "hydro_units": pd.DataFrame(
+        "hydro_units":
             [
             {
-                "v_f": v_f[i].value()[0],
-                "v_t": v_t[i].value()[0],
-                "v_v": v_v[i].value()[0],
+                "v_f": [v for v in v_f[i][:].value()],
+                "v_t": [v for v in v_t[i][:].value()],
+                "v_v": [v for v in v_v[i][:].value()],
                 "water_marginal_cost": constraints[i].multiplier.value[0],
             }
             for i in range(n_hgu)
-        ]),
-        "thermal_units": pd.DataFrame([{"g_t": g_t[i].value()[0]} for i in range(n_tgu)]),
+        ],
+        "thermal_units": [{"g_t": [g for g in g_t[i][:].value()]} for i in range(n_tgu)],
     }
 
 
