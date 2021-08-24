@@ -1,11 +1,11 @@
-cff-version: 0.0.1
+cff-version: 0.0.2
 
 message: "If you use this software, please cite it as below."
 
 authors: 
   - 
-    family-names: de Aquino
-    given-names: Ettore Pureza
+    family-names: Pureza Leonel Bigi de Aquino
+    given-names: Ettore
   -
     family-names: Peters Barbosa
     given-names: João Pedro
