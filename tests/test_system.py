@@ -120,3 +120,20 @@ class TestSystem(TestCase):
 
             # Assert Values
             self.assertEqual(operation["total_cost"], 198.49999999999972)
+
+    def test_PowerSystem_should_dispatch_two_hgus_using_ulp(self):
+        with self.subTest():
+            System = PowerSystem(path="system-2hgu.yml")
+
+            # Dispatching
+            operation = System.dispatch(solver="ulp", scenario=1)
+
+            # Structure
+            self.assertEqual(type(System.data), dict)
+
+            # Content
+            self.assertTrue(System.data["load"] == [150, 150, 150])
+            
+            # Results
+            self.assertEqual(operation["total_cost"], 7175.000000000012)
+

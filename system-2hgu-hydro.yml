@@ -1,0 +1,22 @@
+-
+  name: HU1
+  v_max: 100
+  v_min: 20
+  v_ini: 100
+  prod: 0.95
+  flow_max: 60
+  inflow_scenarios:
+    - [23,16]
+    - [19,14]
+    - [15,11]
+-
+  name: HU2
+  v_max: 200
+  v_min: 40
+  v_ini: 200
+  prod: 0.85
+  flow_max: 100
+  inflow_scenarios:
+    - [46,32]
+    - [38,28]
+    - [30,22]
