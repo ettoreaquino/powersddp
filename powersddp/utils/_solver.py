@@ -169,22 +169,29 @@ def ulp(
             )
         )
 
+    hgu_results, tgu_results = [], []
+    for stage in range(system_data["stages"]):
+        for i in range(n_hgu):
+            hgu_results.append({"stage": stage + 1,
+                                "name": system_data["hydro_units"][i]["name"],
+                                "vf": float(v_f[i][stage].value()[0]),
+                                "vt": float(v_t[i][stage].value()[0]),
+                                "vv": float(v_v[i][stage].value()[0]),
+                                "wmc": float(constraints[i].multiplier.value[0])})
+        for i in range(n_tgu):
+            tgu_results.append({"stage": stage + 1,
+                                "name": system_data["thermal_units"][i]["name"],
+                                "gt": float(g_t[i][stage].value()[0])})
+
+
+
+
     return {
         "total_cost": objective_function.value()[0],  # type: ignore
         "operational_marginal_cost": constraints[n_hgu].multiplier.value[0],
         "shortage": shortage[0].value()[0],
-        "hydro_units": [
-            {
-                "v_f": [v for v in v_f[i][:].value()],
-                "v_t": [v for v in v_t[i][:].value()],
-                "v_v": [v for v in v_v[i][:].value()],
-                "water_marginal_cost": constraints[i].multiplier.value[0],
-            }
-            for i in range(n_hgu)
-        ],
-        "thermal_units": [
-            {"g_t": [g for g in g_t[i][:].value()]} for i in range(n_tgu)
-        ],
+        "hydro_units": pd.DataFrame(hgu_results),
+        "thermal_units": pd.DataFrame(tgu_results),
     }
 
 
@@ -376,3 +383,11 @@ def plot_future_cost_function(operation: pd.DataFrame):
 
     fig.update_layout(height=300 * n_stages, title_text="Future Cost Function")
     fig.show()
+
+
+def plot_system_single_stage_function(hgu_operation: pd.DataFrame, tgu_operation: pd.DataFrame):
+
+    breakpoint()
+    print(False)
+
+    return None

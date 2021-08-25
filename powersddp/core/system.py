@@ -215,5 +215,13 @@ class PowerSystem(PowerSystemInterface):
 
             return operation_df
 
+
         elif solver == "ulp":
-            return ulp(system_data=self.data, scenario=0, verbose=verbose)
+            result = ulp(
+                system_data=self.data,
+                scenario=0,
+                verbose=verbose,
+            )
+
+            plot_system_single_stage_function(result["hydro_units"], result["thermal_units"])
+
