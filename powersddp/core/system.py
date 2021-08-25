@@ -244,13 +244,13 @@ class PowerSystem(PowerSystemInterface):
                             gu_operation=result["hydro_units"],
                             yaxis_column="vf",
                             yaxis_title="HGU Volume (hm3)",
-                            plot_title="HGU Stored Volume",
+                            plot_title="HGU Stored Volume on Scenario {}".format(scn + 1),
                         )
                         plot_ulp(
                             gu_operation=result["thermal_units"],
                             yaxis_column="gt",
                             yaxis_title="Power Generation (MWmed)",
-                            plot_title="TGU Power Generation (MWmed)",
+                            plot_title="TGU Power Generation on Scenario {}".format(scn + 1),
                         )
             else:
                 result = ulp(
