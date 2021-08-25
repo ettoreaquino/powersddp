@@ -74,12 +74,19 @@ print("System Load: {}\n"
 
 #### **dispatch()** accepts the following arguments:
 
+- `solver : str, optional defaults to 'sdp'`
+  - Selects the solver option for the minimization objective function.
+
+- `scenario : int, optional defaults to 0`
+  - Chooses either a specific scenario to investigate (`scenario>1`) or all scenarios to evaluate (`scenario= 0`). Starting from 0 to the number of declared scenarios in the `hydro_units['inflow_scenarios']` parameter.
+
 - `verbose : bool, optional defaults to False`
   - Displays the PDDE solution for every stage of the execution. Use with care, solutions of complex systems with too many stages and scenarios might overflow the console.
 
 - `plot : bool, optional, defaults to False`
   - Displays a sequence of plots showing the future cost function for every stage of the execution. 
 
+The following example executes the Power System dispatch using the Unique Linear Programming method for the first scenario (id = 1) and outputs the optimization steps.
 
 ```Python
 import powersddp as psddp
@@ -100,7 +107,7 @@ data = {'load': [50, 50, 50],
                           {'name': 'GT2', 'capacity': 10, 'cost': 25}]}
 
 PowerSystem = psddp.PowerSystem(data=data)
-operation = PowerSystem.dispatch()
+operation = PowerSystem.dispatch(solver='ulp', scenario=1, verbose=True)
 
 print(operation)
 ```

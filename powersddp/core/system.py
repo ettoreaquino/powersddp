@@ -218,8 +218,10 @@ class PowerSystem(PowerSystemInterface):
                         operation.append(
                             {
                                 "stage": stage,
-                                "name": self.data["hydro_units"][i]['name'],
-                                "storage_percentage": "{}%".format(int(discretization[i])),
+                                "name": self.data["hydro_units"][i]["name"],
+                                "storage_percentage": "{}%".format(
+                                    int(discretization[i])
+                                ),
                                 "initial_volume": v_i[i],
                                 "average_cost": round(average, 2),
                             }
@@ -246,13 +248,17 @@ class PowerSystem(PowerSystemInterface):
                             gu_operation=result["hydro_units"],
                             yaxis_column="vf",
                             yaxis_title="HGU Volume (hm3)",
-                            plot_title="HGU Stored Volume on Scenario {}".format(scn + 1),
+                            plot_title="HGU Stored Volume on Scenario {}".format(
+                                scn + 1
+                            ),
                         )
                         plot_ulp(
                             gu_operation=result["thermal_units"],
                             yaxis_column="gt",
                             yaxis_title="Power Generation (MWmed)",
-                            plot_title="TGU Power Generation on Scenario {}".format(scn + 1),
+                            plot_title="TGU Power Generation on Scenario {}".format(
+                                scn + 1
+                            ),
                         )
             else:
                 result = ulp(
@@ -276,3 +282,5 @@ class PowerSystem(PowerSystemInterface):
                             scenario
                         ),
                     )
+
+            return result

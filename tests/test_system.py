@@ -76,7 +76,7 @@ class TestSystem(TestCase):
             System = PowerSystem(data=payload)
 
             # Dispatching
-            operation = System.dispatch(solver="sdp", verbose=True)
+            operation = System.dispatch(solver="sdp")
             # Assert Structure
             self.assertEqual(type(operation), pd.DataFrame)
 
@@ -111,12 +111,12 @@ class TestSystem(TestCase):
             System = PowerSystem(data=payload)
 
             # Dispatching
-            operation = System.dispatch(solver="ulp", verbose=True)
+            operation = System.dispatch(solver="ulp", scenario=1)
 
             # Assert Structure
             self.assertEqual(type(operation), dict)
-            self.assertEqual(type(operation["hydro_units"]), list)
-            self.assertEqual(type(operation["thermal_units"]), list)
+            self.assertEqual(type(operation["hydro_units"]), pd.DataFrame)
+            self.assertEqual(type(operation["thermal_units"]), pd.DataFrame)
 
             # Assert Values
             self.assertEqual(operation["total_cost"], 198.49999999999972)

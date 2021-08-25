@@ -1,4 +1,4 @@
-load: [100,100,100]
+load: [50,50,50]
 discretizations: 3
 stages: 3
 scenarios: 2
