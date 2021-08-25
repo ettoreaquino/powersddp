@@ -1,5 +1,10 @@
 [![PyPI version](https://badge.fury.io/py/powersddp.svg)](https://badge.fury.io/py/powersddp)
 
+[![Python versions](https://img.shields.io/pypi/pyversions/powersddp.svg)](https://pypi.python.org/pypi/powersddp)
+
+[![Downloads](https://pepy.tech/badge/powersddp)](https://pepy.tech/project/powersddp)
+
+
 # **Power** System **S**tochastic **D**ual **D**ynamic **P**rogramming
 
 The main goal of this library is to provide support for studies regarding the optimal dispatch of power systems, majorly comprised of Thermoelectric and Hydroelectric Generators.
@@ -34,8 +39,8 @@ system = psddp.PowerSystem(path='system.yml')
 print("System Load: {}\n"
       "Number of HGUs: {}\n"
       "Number of TGUs: {}".format(system.data['load'],
-                                  len(system.data['hydro-units']),
-                                  len(system.data['thermal-units'])))
+                                  len(system.data['hydro_units']),
+                                  len(system.data['thermal_units'])))
 ```
 
 ```Python
@@ -46,22 +51,23 @@ data = {'load': [50, 50, 50],
         'stages': 3,
         'scenarios': 2,
         'outage_cost': 500,
-        'hydro-units': [{'name': 'HU1',
+        'hydro_units': [{'name': 'HU1',
                          'v_max': 100,
                          'v_min': 20,
+                         'v_ini': 100,
                          'prod': 0.95,
                          'flow_max': 60,
                          'inflow_scenarios': [[23, 16], [19, 14], [15, 11]]}],
-        'thermal-units': [{'name': 'GT1', 'capacity': 15, 'cost': 10},
+        'thermal_units': [{'name': 'GT1', 'capacity': 15, 'cost': 10},
                           {'name': 'GT2', 'capacity': 10, 'cost': 25}]}
 
 PowerSystem = psddp.PowerSystem(data=data)
 
 print("System Load: {}\n"
       "Number of HGUs: {}\n"
-      "Number of TGUs: {}".format(system.data['load'],
-                                  len(system.data['hydro-units']),
-                                  len(system.data['thermal-units'])))
+      "Number of TGUs: {}".format(PowerSystem.data['load'],
+                                  len(PowerSystem.data['hydro_units']),
+                                  len(PowerSystem.data['thermal_units'])))
 ```
 
 ### Dispatching a `PowerSystem`
@@ -83,13 +89,14 @@ data = {'load': [50, 50, 50],
         'stages': 3,
         'scenarios': 2,
         'outage_cost': 500,
-        'hydro-units': [{'name': 'HU1',
+        'hydro_units': [{'name': 'HU1',
                          'v_max': 100,
                          'v_min': 20,
+                         'v_ini': 100,
                          'prod': 0.95,
                          'flow_max': 60,
                          'inflow_scenarios': [[23, 16], [19, 14], [15, 11]]}],
-        'thermal-units': [{'name': 'GT1', 'capacity': 15, 'cost': 10},
+        'thermal_units': [{'name': 'GT1', 'capacity': 15, 'cost': 10},
                           {'name': 'GT2', 'capacity': 10, 'cost': 25}]}
 
 PowerSystem = psddp.PowerSystem(data=data)

@@ -1,0 +1,22 @@
+cff-version: 0.0.2
+
+message: "If you use this software, please cite it as below."
+
+authors: 
+  - 
+    family-names: Pureza Leonel Bigi de Aquino
+    given-names: Ettore
+  -
+    family-names: Peters Barbosa
+    given-names: João Pedro
+  - 
+    family-names: Peters Barbosa
+    given-names: Pedro Henrique
+
+title: "PPEE_210092: Power System Stochastic Dual Dynamic Programming Library"
+
+version: 0.0.1
+
+date-released: 2021-08-22
+
+url: "https://github.com/ettoreaquino/powersddp"
