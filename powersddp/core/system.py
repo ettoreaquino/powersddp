@@ -15,6 +15,7 @@ thermal_units: !include system-thermal.yml
   name: str
   v_max: float
   v_min: float
+  v_ini: float
   prod: float
   flow_max: float
   inflow_scenarios:
@@ -36,7 +37,12 @@ import pandas as pd
 import yaml
 
 from powersddp.utils._yml import YmlLoader
-from powersddp.utils._solver import ulp, sdp, plot_future_cost_function
+from powersddp.utils._solver import (
+    ulp,
+    sdp,
+    plot_future_cost_function,
+    plot_ulp,
+)
 
 
 class PowerSystemInterface(ABC):
@@ -215,7 +221,6 @@ class PowerSystem(PowerSystemInterface):
 
             return operation_df
 
-
         elif solver == "ulp":
             result = ulp(
                 system_data=self.data,
@@ -223,5 +228,16 @@ class PowerSystem(PowerSystemInterface):
                 verbose=verbose,
             )
 
-            plot_system_single_stage_function(result["hydro_units"], result["thermal_units"])
-
+            if plot:
+                plot_ulp(
+                    gu_operation=result["hydro_units"],
+                    yaxis_column="vf",
+                    yaxis_title="HGU Volume (hm3)",
+                    plot_title="HGU Stored Volume",
+                )
+                plot_ulp(
+                    gu_operation=result["thermal_units"],
+                    yaxis_column="gt",
+                    yaxis_title="Power Generation (MWmed)",
+                    plot_title="TGU Power Generation (MWmed)",
+                )

@@ -172,19 +172,24 @@ def ulp(
     hgu_results, tgu_results = [], []
     for stage in range(system_data["stages"]):
         for i in range(n_hgu):
-            hgu_results.append({"stage": stage + 1,
-                                "name": system_data["hydro_units"][i]["name"],
-                                "vf": float(v_f[i][stage].value()[0]),
-                                "vt": float(v_t[i][stage].value()[0]),
-                                "vv": float(v_v[i][stage].value()[0]),
-                                "wmc": float(constraints[i].multiplier.value[0])})
+            hgu_results.append(
+                {
+                    "stage": stage + 1,
+                    "name": system_data["hydro_units"][i]["name"],
+                    "vf": round(v_f[i][stage].value()[0], 3),
+                    "vt": round(v_t[i][stage].value()[0], 3),
+                    "vv": round(v_v[i][stage].value()[0], 3),
+                    "wmc": round(constraints[i].multiplier.value[0], 3),
+                }
+            )
         for i in range(n_tgu):
-            tgu_results.append({"stage": stage + 1,
-                                "name": system_data["thermal_units"][i]["name"],
-                                "gt": float(g_t[i][stage].value()[0])})
-
-
-
+            tgu_results.append(
+                {
+                    "stage": stage + 1,
+                    "name": system_data["thermal_units"][i]["name"],
+                    "gt": round(g_t[i][stage].value()[0], 3),
+                }
+            )
 
     return {
         "total_cost": objective_function.value()[0],  # type: ignore
@@ -361,7 +366,7 @@ def sdp(
 
 def plot_future_cost_function(operation: pd.DataFrame):
 
-    n_stages = len(operation["stage"].unique())
+    n_stages = operation["stage"].unique().size
 
     fig = make_subplots(rows=n_stages, cols=1)
 
@@ -385,9 +390,29 @@ def plot_future_cost_function(operation: pd.DataFrame):
     fig.show()
 
 
-def plot_system_single_stage_function(hgu_operation: pd.DataFrame, tgu_operation: pd.DataFrame):
+def plot_ulp(
+    gu_operation: pd.DataFrame, yaxis_column: str, yaxis_title: str, plot_title: str
+):
 
-    breakpoint()
-    print(False)
+    n_gu = gu_operation["name"].unique().size
 
-    return None
+    fig = make_subplots(rows=n_gu, cols=1)
+
+    for i, gu in enumerate(gu_operation["name"].unique()):
+        gu_df = gu_operation.loc[gu_operation["name"] == gu]
+        fig.add_trace(
+            go.Scatter(
+                x=gu_df["stage"],
+                y=gu_df[yaxis_column],
+                mode="lines",
+                name="{}".format(gu),
+            ),
+            row=i + 1,
+            col=1,
+        )
+
+    fig.update_xaxes(title_text="Stages")
+    fig.update_yaxes(title_text=yaxis_title)
+
+    fig.update_layout(height=300 * n_gu, title_text=plot_title)
+    fig.show()
