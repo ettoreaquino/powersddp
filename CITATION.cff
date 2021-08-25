@@ -15,8 +15,8 @@ authors:
 
 title: "PPEE_210092: Power System Stochastic Dual Dynamic Programming Library"
 
-version: 0.0.1
+version: 0.0.2
 
-date-released: 2021-08-22
+date-released: 2021-08-25
 
 url: "https://github.com/ettoreaquino/powersddp"

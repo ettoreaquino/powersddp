@@ -2,7 +2,9 @@
 name = "powersddp"
 version = "0.0.2"
 description = "A Stochastic Dual Dynamic Programmimg library to solve economical dispach of power systems."
-authors = ["Ettore Aquino <ettore@ettoreaquino.com>", "João Pedro Peters <jppbrbs@gmail.com>"]
+authors = ["Ettore Aquino <ettore@ettoreaquino.com>",
+           "João Pedro Peters <jppbrbs@gmail.com>",
+           "Pedro Henrique Peters <pedro.peters@engenharia.ufjf.br>"]
 
 repository = "https://github.com/ettoreaquino/powersddp.git"
 

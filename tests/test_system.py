@@ -76,7 +76,7 @@ class TestSystem(TestCase):
             System = PowerSystem(data=payload)
 
             # Dispatching
-            operation = System.dispatch(solver="sdp", verbose=True)
+            operation = System.dispatch(solver="sdp")
             # Assert Structure
             self.assertEqual(type(operation), pd.DataFrame)
 
@@ -111,12 +111,29 @@ class TestSystem(TestCase):
             System = PowerSystem(data=payload)
 
             # Dispatching
-            operation = System.dispatch(solver="ulp", verbose=True)
+            operation = System.dispatch(solver="ulp", scenario=1)
 
             # Assert Structure
             self.assertEqual(type(operation), dict)
-            self.assertEqual(type(operation["hydro_units"]), list)
-            self.assertEqual(type(operation["thermal_units"]), list)
+            self.assertEqual(type(operation["hydro_units"]), pd.DataFrame)
+            self.assertEqual(type(operation["thermal_units"]), pd.DataFrame)
 
             # Assert Values
             self.assertEqual(operation["total_cost"], 198.49999999999972)
+
+    def test_PowerSystem_should_dispatch_two_hgus_using_ulp(self):
+        with self.subTest():
+            System = PowerSystem(path="system-2hgu.yml")
+
+            # Dispatching
+            operation = System.dispatch(solver="ulp", scenario=1)
+
+            # Structure
+            self.assertEqual(type(System.data), dict)
+
+            # Content
+            self.assertTrue(System.data["load"] == [150, 150, 150])
+            
+            # Results
+            self.assertEqual(operation["total_cost"], 7175.000000000012)
+

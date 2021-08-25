@@ -208,21 +208,25 @@ class PowerSystem(PowerSystemInterface):
                         )
                         coef_b -= v_i[i] * avg_water_marginal_cost[i]
 
-                    cuts.append(
-                        {
-                            "stage": stage,
-                            "coef_b": coef_b,
-                            "coefs": avg_water_marginal_cost,
-                        }
-                    )
-                    operation.append(
-                        {
-                            "stage": stage,
-                            "storage_percentage": "{}%".format(int(discretization[i])),
-                            "initial_volume": v_i[0],
-                            "average_cost": round(average, 2),
-                        }
-                    )
+                        cuts.append(
+                            {
+                                "stage": stage,
+                                "coef_b": coef_b,
+                                "coefs": avg_water_marginal_cost,
+                            }
+                        )
+                        operation.append(
+                            {
+                                "stage": stage,
+                                "name": self.data["hydro_units"][i]["name"],
+                                "storage_percentage": "{}%".format(
+                                    int(discretization[i])
+                                ),
+                                "initial_volume": v_i[i],
+                                "average_cost": round(average, 2),
+                            }
+                        )
+            self.cuts = cuts
             operation_df = pd.DataFrame(operation)
 
             if n_hgu == 1 and plot:
@@ -244,13 +248,17 @@ class PowerSystem(PowerSystemInterface):
                             gu_operation=result["hydro_units"],
                             yaxis_column="vf",
                             yaxis_title="HGU Volume (hm3)",
-                            plot_title="HGU Stored Volume on Scenario {}".format(scn + 1),
+                            plot_title="HGU Stored Volume on Scenario {}".format(
+                                scn + 1
+                            ),
                         )
                         plot_ulp(
                             gu_operation=result["thermal_units"],
                             yaxis_column="gt",
                             yaxis_title="Power Generation (MWmed)",
-                            plot_title="TGU Power Generation on Scenario {}".format(scn + 1),
+                            plot_title="TGU Power Generation on Scenario {}".format(
+                                scn + 1
+                            ),
                         )
             else:
                 result = ulp(
@@ -274,3 +282,5 @@ class PowerSystem(PowerSystemInterface):
                             scenario
                         ),
                     )
+
+            return result
