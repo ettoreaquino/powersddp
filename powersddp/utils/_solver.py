@@ -125,7 +125,7 @@ def ulp(
 
     ## Print
     if verbose:
-        print("======================================")
+        print("============ SCENARIO {} =============".format(scenario + 1))
         print("Total Cost (All stages): ${}".format(round(objective_function.value()[0], 2)))  # type: ignore
         print("======================================\n")
         for stage in range(system_data["stages"]):
@@ -169,22 +169,34 @@ def ulp(
             )
         )
 
+    hgu_results, tgu_results = [], []
+    for stage in range(system_data["stages"]):
+        for i in range(n_hgu):
+            hgu_results.append(
+                {
+                    "stage": stage + 1,
+                    "name": system_data["hydro_units"][i]["name"],
+                    "vf": round(v_f[i][stage].value()[0], 3),
+                    "vt": round(v_t[i][stage].value()[0], 3),
+                    "vv": round(v_v[i][stage].value()[0], 3),
+                    "wmc": round(constraints[i].multiplier.value[0], 3),
+                }
+            )
+        for i in range(n_tgu):
+            tgu_results.append(
+                {
+                    "stage": stage + 1,
+                    "name": system_data["thermal_units"][i]["name"],
+                    "gt": round(g_t[i][stage].value()[0], 3),
+                }
+            )
+
     return {
         "total_cost": objective_function.value()[0],  # type: ignore
         "operational_marginal_cost": constraints[n_hgu].multiplier.value[0],
         "shortage": shortage[0].value()[0],
-        "hydro_units": [
-            {
-                "v_f": [v for v in v_f[i][:].value()],
-                "v_t": [v for v in v_t[i][:].value()],
-                "v_v": [v for v in v_v[i][:].value()],
-                "water_marginal_cost": constraints[i].multiplier.value[0],
-            }
-            for i in range(n_hgu)
-        ],
-        "thermal_units": [
-            {"g_t": [g for g in g_t[i][:].value()]} for i in range(n_tgu)
-        ],
+        "hydro_units": pd.DataFrame(hgu_results),
+        "thermal_units": pd.DataFrame(tgu_results),
     }
 
 
@@ -354,7 +366,7 @@ def sdp(
 
 def plot_future_cost_function(operation: pd.DataFrame):
 
-    n_stages = len(operation["stage"].unique())
+    n_stages = operation["stage"].unique().size
 
     fig = make_subplots(rows=n_stages, cols=1)
 
@@ -375,4 +387,32 @@ def plot_future_cost_function(operation: pd.DataFrame):
     fig.update_yaxes(title_text="$/MW")
 
     fig.update_layout(height=300 * n_stages, title_text="Future Cost Function")
+    fig.show()
+
+
+def plot_ulp(
+    gu_operation: pd.DataFrame, yaxis_column: str, yaxis_title: str, plot_title: str
+):
+
+    n_gu = gu_operation["name"].unique().size
+
+    fig = make_subplots(rows=n_gu, cols=1)
+
+    for i, gu in enumerate(gu_operation["name"].unique()):
+        gu_df = gu_operation.loc[gu_operation["name"] == gu]
+        fig.add_trace(
+            go.Scatter(
+                x=gu_df["stage"],
+                y=gu_df[yaxis_column],
+                mode="lines",
+                name="{}".format(gu),
+            ),
+            row=i + 1,
+            col=1,
+        )
+
+    fig.update_xaxes(title_text="Stages")
+    fig.update_yaxes(title_text=yaxis_title)
+
+    fig.update_layout(height=300 * n_gu, title_text=plot_title)
     fig.show()

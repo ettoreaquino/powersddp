@@ -15,6 +15,7 @@ thermal_units: !include system-thermal.yml
   name: str
   v_max: float
   v_min: float
+  v_ini: float
   prod: float
   flow_max: float
   inflow_scenarios:
@@ -36,7 +37,12 @@ import pandas as pd
 import yaml
 
 from powersddp.utils._yml import YmlLoader
-from powersddp.utils._solver import ulp, sdp, plot_future_cost_function
+from powersddp.utils._solver import (
+    ulp,
+    sdp,
+    plot_future_cost_function,
+    plot_ulp,
+)
 
 
 class PowerSystemInterface(ABC):
@@ -112,7 +118,12 @@ class PowerSystem(PowerSystemInterface):
             )
 
     def dispatch(
-        self, *, solver: str = "sdp", plot: bool = False, verbose: bool = False
+        self,
+        *,
+        solver: str = "sdp",
+        plot: bool = False,
+        verbose: bool = False,
+        scenario: int = 0,
     ):
         """Solves a financial dispatch of a Power System class
 
@@ -123,10 +134,14 @@ class PowerSystem(PowerSystemInterface):
 
         Parameters
         ----------
+        solver : str
+            String that determines the structure of the objective function.
         plot : bool, optional
             Boolean to plot the future cost function of every stage.
         verbose : bool, optional
             Dictionary containing the structured data of the system.
+        scenario : int, optional
+            Integer that defines the scenario to be analyzed.
 
         Returns
         -------
@@ -218,4 +233,46 @@ class PowerSystem(PowerSystemInterface):
             return operation_df
 
         elif solver == "ulp":
-            return ulp(system_data=self.data, scenario=0, verbose=verbose)
+            if scenario == 0:
+                for scn in range(self.data["scenarios"]):
+                    result = ulp(
+                        system_data=self.data,
+                        scenario=scn,
+                        verbose=verbose,
+                    )
+
+                    if plot:
+                        plot_ulp(
+                            gu_operation=result["hydro_units"],
+                            yaxis_column="vf",
+                            yaxis_title="HGU Volume (hm3)",
+                            plot_title="HGU Stored Volume on Scenario {}".format(scn + 1),
+                        )
+                        plot_ulp(
+                            gu_operation=result["thermal_units"],
+                            yaxis_column="gt",
+                            yaxis_title="Power Generation (MWmed)",
+                            plot_title="TGU Power Generation on Scenario {}".format(scn + 1),
+                        )
+            else:
+                result = ulp(
+                    system_data=self.data,
+                    scenario=scenario - 1,
+                    verbose=verbose,
+                )
+
+                if plot:
+                    plot_ulp(
+                        gu_operation=result["hydro_units"],
+                        yaxis_column="vf",
+                        yaxis_title="HGU Volume (hm3)",
+                        plot_title="HGUs Stored Volume on Scenario {}".format(scenario),
+                    )
+                    plot_ulp(
+                        gu_operation=result["thermal_units"],
+                        yaxis_column="gt",
+                        yaxis_title="Power Generation (MWmed)",
+                        plot_title="TGUs Power Generation on Scenario {}".format(
+                            scenario
+                        ),
+                    )
