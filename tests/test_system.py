@@ -133,7 +133,6 @@ class TestSystem(TestCase):
 
             # Content
             self.assertTrue(System.data["load"] == [150, 150, 150])
-            
+
             # Results
             self.assertEqual(operation["total_cost"], 7175.000000000012)
-
