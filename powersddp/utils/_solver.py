@@ -125,7 +125,7 @@ def ulp(
 
     ## Print
     if verbose:
-        print("======================================")
+        print("============ SCENARIO {} =============".format(scenario + 1))
         print("Total Cost (All stages): ${}".format(round(objective_function.value()[0], 2)))  # type: ignore
         print("======================================\n")
         for stage in range(system_data["stages"]):
