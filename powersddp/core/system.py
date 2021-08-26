@@ -160,6 +160,7 @@ class PowerSystem(PowerSystemInterface):
             )
 
             operation = []
+            complete_result = []
             cuts = []  # type: ignore
             for stage in range(self.data["stages"], 0, -1):
                 for discretization in discretizations:
@@ -194,6 +195,8 @@ class PowerSystem(PowerSystemInterface):
                             stage=stage + 1,
                             verbose=verbose,
                         )
+                        complete_result.append(result)
+
                         average += result["total_cost"]
                         for i, hgu in enumerate(result["hydro_units"]):
                             avg_water_marginal_cost[i] += hgu["water_marginal_cost"]
@@ -232,7 +235,7 @@ class PowerSystem(PowerSystemInterface):
             if n_hgu == 1 and plot:
                 plot_future_cost_function(operation=operation_df)
 
-            return operation_df
+            return operation_df, complete_result
 
         elif solver == "ulp":
             if scenario == 0:

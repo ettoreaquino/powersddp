@@ -353,6 +353,7 @@ def sdp(
         "shortage": shortage[0].value()[0],
         "hydro_units": [
             {
+                "name": system_data["hydro_units"][i]["name"],
                 "v_f": v_f[i].value()[0],
                 "v_t": v_t[i].value()[0],
                 "v_v": v_v[i].value()[0],
