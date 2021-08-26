@@ -164,10 +164,10 @@ class PowerSystem(PowerSystemInterface):
                 xaxis, yaxis = np.meshgrid(
                     np.arange(0, 100 + step, step), np.arange(0, 100 + step, step)
                 )
+                costs = []
 
             operation = []
             cuts = []  # type: ignore
-            costs = []
             for stage in range(self.data["stages"], 0, -1):
 
                 if n_hgu == 2:
@@ -266,7 +266,7 @@ class PowerSystem(PowerSystemInterface):
 
             elif n_hgu == 2 and plot:
                 costs_df = pd.DataFrame(costs)
-                plot_future_cost_3D_function(operation=operation_df, costs=costs_df)
+                plot_future_cost_3D_function(costs=costs_df)
 
             return operation_df
 

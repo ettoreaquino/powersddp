@@ -3,7 +3,6 @@
 
 
 import cvxopt.modeling as model
-import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -391,7 +390,7 @@ def plot_future_cost_function(operation: pd.DataFrame):
     fig.show()
 
 
-def plot_future_cost_3D_function(operation: pd.DataFrame, costs: pd.DataFrame):
+def plot_future_cost_3D_function(costs: pd.DataFrame):
 
     n_stages = costs["stage"].unique().size
 
