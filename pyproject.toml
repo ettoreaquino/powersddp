@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "powersddp"
-version = "0.0.2"
+version = "0.0.3"
 description = "A Stochastic Dual Dynamic Programmimg library to solve economical dispach of power systems."
 authors = ["Ettore Aquino <ettore@ettoreaquino.com>",
            "João Pedro Peters <jppbrbs@gmail.com>",

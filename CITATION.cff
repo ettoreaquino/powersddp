@@ -1,4 +1,4 @@
-cff-version: 0.0.2
+cff-version: 0.0.3
 
 message: "If you use this software, please cite it as below."
 
@@ -15,7 +15,7 @@ authors:
 
 title: "PPEE_210092: Power System Stochastic Dual Dynamic Programming Library"
 
-version: 0.0.2
+version: 0.0.3
 
 date-released: 2021-08-25
 
