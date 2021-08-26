@@ -3,6 +3,7 @@
 
 
 import cvxopt.modeling as model
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -387,6 +388,55 @@ def plot_future_cost_function(operation: pd.DataFrame):
     fig.update_yaxes(title_text="$/MW")
 
     fig.update_layout(height=300 * n_stages, title_text="Future Cost Function")
+    fig.show()
+
+
+def plot_future_cost_3D_function(operation: pd.DataFrame, costs: pd.DataFrame):
+
+    n_stages = costs["stage"].unique().size
+
+    fig = make_subplots(
+        rows=n_stages,
+        cols=1,
+        specs=[[{"type": "surface"}]] * n_stages,
+        subplot_titles=["Stage {}".format(stage + 1) for stage in range(n_stages)],
+    )
+
+    for i, stage in enumerate(costs["stage"].unique()):
+        stage_df = costs.loc[costs["stage"] == stage]
+        fig.add_trace(
+            go.Surface(
+                x=stage_df["xaxis"].values[0],
+                y=stage_df["yaxis"].values[0],
+                z=stage_df["zaxis"].values[0],
+                showscale=False,
+                colorscale="Viridis",
+            ),
+            row=i + 1,
+            col=1,
+        )
+
+    fig.update_layout(
+        scene=dict(
+            xaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][0]),
+            yaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][1]),
+            zaxis_title="$/MW",
+        ),
+        scene2=dict(
+            xaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][0]),
+            yaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][1]),
+            zaxis_title="$/MW",
+        ),
+        scene3=dict(
+            xaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][0]),
+            yaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][1]),
+            zaxis_title="$/MW",
+        ),
+        height=900 * n_stages,
+        width=1500,
+        title_text="Future Cost Function",
+        autosize=False,
+    )
     fig.show()
 
 

@@ -41,6 +41,7 @@ from powersddp.utils._solver import (
     ulp,
     sdp,
     plot_future_cost_function,
+    plot_future_cost_3D_function,
     plot_ulp,
 )
 
@@ -159,9 +160,20 @@ class PowerSystem(PowerSystemInterface):
                 product(np.arange(0, 100 + step, step), repeat=n_hgu)
             )
 
+            xaxis, yaxis = np.meshgrid(
+                np.arange(0, 100 + step, step), np.arange(0, 100 + step, step)
+            )
+
             operation = []
             cuts = []  # type: ignore
+            costs = []
             for stage in range(self.data["stages"], 0, -1):
+
+                if n_hgu == 2:
+                    cost = np.zeros(
+                        (self.data["discretizations"], self.data["discretizations"])
+                    )
+
                 for discretization in discretizations:
 
                     v_i = []
@@ -183,7 +195,7 @@ class PowerSystem(PowerSystemInterface):
                         if verbose:
                             print(
                                 "STAGE: {} | DISC.: {}% | SCENARIO: {}".format(
-                                    stage, int(discretization[0]), scenario
+                                    stage, int(discretization[0]), scenario + 1
                                 )
                             )
                         result = sdp(
@@ -200,6 +212,13 @@ class PowerSystem(PowerSystemInterface):
 
                     # Calculating the average of the scenarios
                     average = average / self.data["scenarios"]
+                    if n_hgu == 2:
+                        for row in range(self.data["discretizations"]):
+                            for col in range(self.data["discretizations"]):
+                                if (xaxis[row][col] == discretization[0]) and (
+                                    yaxis[row][col] == discretization[1]
+                                ):
+                                    cost[row][col] = average
                     coef_b = average
                     for i, hgu in enumerate(result["hydro_units"]):
                         # ! Invert the coefficient because of the minimization problem inverts the signal
@@ -226,11 +245,27 @@ class PowerSystem(PowerSystemInterface):
                                 "average_cost": round(average, 2),
                             }
                         )
+
+                if n_hgu == 2:
+                    costs.append(
+                        {
+                            "HGUs": [hgu["name"] for hgu in self.data["hydro_units"]],
+                            "stage": stage,
+                            "xaxis": xaxis,
+                            "yaxis": yaxis,
+                            "zaxis": cost,
+                        }
+                    )
+
             self.cuts = cuts
             operation_df = pd.DataFrame(operation)
 
             if n_hgu == 1 and plot:
                 plot_future_cost_function(operation=operation_df)
+
+            elif n_hgu == 2 and plot:
+                costs_df = pd.DataFrame(costs)
+                plot_future_cost_3D_function(operation=operation_df, costs=costs_df)
 
             return operation_df
 
