@@ -244,6 +244,7 @@ class PowerSystem(PowerSystemInterface):
                                 ),
                                 "initial_volume": v_i[i],
                                 "average_cost": round(average, 2),
+                                "hydro_units": result["hydro_units"],
                             }
                         )
 
