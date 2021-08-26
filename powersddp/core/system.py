@@ -160,9 +160,10 @@ class PowerSystem(PowerSystemInterface):
                 product(np.arange(0, 100 + step, step), repeat=n_hgu)
             )
 
-            xaxis, yaxis = np.meshgrid(
-                np.arange(0, 100 + step, step), np.arange(0, 100 + step, step)
-            )
+            if n_hgu == 2:
+                xaxis, yaxis = np.meshgrid(
+                    np.arange(0, 100 + step, step), np.arange(0, 100 + step, step)
+                )
 
             operation = []
             cuts = []  # type: ignore
