@@ -321,30 +321,3 @@ class PowerSystem(PowerSystemInterface):
                     )
 
             return result
-
-    def solver_compare(self, *, solver1: str = None, solver2: str = None, scenario: int = 0):
-        """Enables the per-stage cost result comparison between solvers
-
-        Once instantiated a Power System can deploy the generation units based on the
-        minimization of an objective function. This method iterates over every stage
-        and scenario of the Power System, finding the optimal solution of the problem
-        using the Dual Stochastic Dynamic Programming technique.
-
-        Parameters
-        ----------
-        solver : str
-            String that determines the structure of the objective function.
-        plot : bool, optional
-            Boolean to plot the future cost function of every stage.
-        verbose : bool, optional
-            Dictionary containing the structured data of the system.
-        scenario : int, optional
-            Integer that defines the scenario to be analyzed.
-
-        Returns
-        -------
-        operation : pandas.DataFrame, obj
-            Returns either a Dataframe or a dictionary containing the
-            operation on every stage and scenario.
-
-        """
