@@ -7,10 +7,11 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from cvxopt import solvers
-from plotly.subplots import make_subplots
+
 
 solvers.options["glpk"] = dict(msg_lev="GLP_MSG_OFF")
 
+from powersddp.service.solver.api import (logger_service)
 
 # Unique Linear Programming
 def ulp(
@@ -125,49 +126,60 @@ def ulp(
 
     ## Print
     if verbose:
-        print("============ SCENARIO {} =============".format(scenario + 1))
-        print("Total Cost (All stages): ${}".format(round(objective_function.value()[0], 2)))  # type: ignore
-        print("======================================\n")
-        for stage in range(system_data["stages"]):
-            print("============== STAGE {} ==============".format(stage + 1))
-            for i, hgu in enumerate(system_data["hydro_units"]):
-                print(
-                    "{} | {:>15s}: {:>7.2f} hm3".format(
-                        hgu["name"], v_f[i].name, v_f[i][stage].value()[0]
-                    )
-                )
-                print(
-                    "{} | {:>15s}: {:>7.2f} hm3".format(
-                        hgu["name"], v_t[i].name, v_t[i][stage].value()[0]
-                    )
-                )
-                print(
-                    "{} | {:>15s}: {:>7.2f} hm3".format(
-                        hgu["name"], v_v[i].name, v_v[i][stage].value()[0]
-                    )
-                )
-                print(
-                    "{} | {:>15s}: {:>7.2f} $/hm3".format(
-                        hgu["name"], "Water Cost", constraints[i].multiplier.value[0]
-                    )
-                )
+        logger_service.ulp_result(stages=system_data["stages"],
+                                  scenario=scenario+1,
+                                  total_cost=round(objective_function.value()[0], 2),
+                                  hydro_units=system_data["hydro_units"],
+                                  thermal_units=system_data["thermal_units"],
+                                  final_volume=v_f,
+                                  turbined_volume=v_t,
+                                  shedded_volume=v_v,
+                                  constraints=constraints,
+                                  power_generated=g_t,
+                                  shortage=shortage)
+        # print("============ SCENARIO {} =============".format(scenario + 1))
+        # print("Total Cost (All stages): ${}".format(round(objective_function.value()[0], 2)))  # type: ignore
+        # print("======================================\n")
+        # for stage in range(system_data["stages"]):
+        #     print("============== STAGE {} ==============".format(stage + 1))
+        #     for i, hgu in enumerate(system_data["hydro_units"]):
+        #         print(
+        #             "{} | {:>15s}: {:>7.2f} hm3".format(
+        #                 hgu["name"], v_f[i].name, v_f[i][stage].value()[0]
+        #             )
+        #         )
+        #         print(
+        #             "{} | {:>15s}: {:>7.2f} hm3".format(
+        #                 hgu["name"], v_t[i].name, v_t[i][stage].value()[0]
+        #             )
+        #         )
+        #         print(
+        #             "{} | {:>15s}: {:>7.2f} hm3".format(
+        #                 hgu["name"], v_v[i].name, v_v[i][stage].value()[0]
+        #             )
+        #         )
+        #         print(
+        #             "{} | {:>15s}: {:>7.2f} $/hm3".format(
+        #                 hgu["name"], "Water Cost", constraints[i].multiplier.value[0]
+        #             )
+        #         )
 
-            for i, tgu in enumerate(system_data["thermal_units"]):
-                print("--------------------------------------")
-                print(
-                    "{} | {}: {:>7.2f} MWmed".format(
-                        tgu["name"], g_t[i].name, g_t[i][stage].value()[0]
-                    )
-                )
-            print("======================================\n")
-        print(
-            """======================================\n{}: {:.2f} MWmed\nMarginal Cost: {:.2f}\n======================================\n
-        """.format(
-                shortage.name,
-                shortage[0].value()[0],
-                constraints[n_hgu].multiplier.value[0],
-            )
-        )
+        #     for i, tgu in enumerate(system_data["thermal_units"]):
+        #         print("--------------------------------------")
+        #         print(
+        #             "{} | {}: {:>7.2f} MWmed".format(
+        #                 tgu["name"], g_t[i].name, g_t[i][stage].value()[0]
+        #             )
+        #         )
+        #     print("======================================\n")
+        # print(
+        #     """======================================\n{}: {:.2f} MWmed\nMarginal Cost: {:.2f}\n======================================\n
+        # """.format(
+        #         shortage.name,
+        #         shortage[0].value()[0],
+        #         constraints[n_hgu].multiplier.value[0],
+        #     )
+        # )
 
     hgu_results, tgu_results = [], []
     for stage in range(system_data["stages"]):
@@ -271,7 +283,7 @@ def sdp(
 
     supplying += shortage[0]
 
-    constraints.append(supplying == system_data["load"][stage - 2])
+    constraints.append(supplying == system_data["load"][stage - 1])
 
     ### Bounds
     for i, hgu in enumerate(system_data["hydro_units"]):
@@ -290,7 +302,7 @@ def sdp(
 
     ### Cut constraint (Future cost function of forward stage)
     for cut in cuts:
-        if cut["stage"] == stage:
+        if cut["stage"] == stage - 1:
             equation = 0
             for hgu in range(n_hgu):
                 equation += float(cut["coefs"][hgu]) * v_f[hgu]
@@ -301,119 +313,42 @@ def sdp(
     opt_problem = model.op(objective=objective_function, constraints=constraints)
     opt_problem.solve(format="dense", solver="glpk")
 
-    ## Print
     if verbose:
-        print("======================================")
-        print("Total Cost: ${}".format(round(objective_function.value()[0], 2)))  # type: ignore
-        print("Future Cost: ${}".format(round(alpha[0].value()[0], 2)))
-        print("======================================")
-        for i, hgu in enumerate(system_data["hydro_units"]):
-            print(
-                "{} | {:>15s}: {:>7.2f} hm3".format(
-                    hgu["name"], v_f.name, v_f[i].value()[0]
-                )
-            )
-            print(
-                "{} | {:>15s}: {:>7.2f} hm3".format(
-                    hgu["name"], v_t.name, v_t[i].value()[0]
-                )
-            )
-            print(
-                "{} | {:>15s}: {:>7.2f} hm3".format(
-                    hgu["name"], v_v.name, v_v[i].value()[0]
-                )
-            )
-            print(
-                "{} | {:>15s}: {:>7.2f} $/hm3".format(
-                    hgu["name"], "Water Cost", constraints[i].multiplier.value[0]
-                )
-            )
-
-        for i, tgu in enumerate(system_data["thermal_units"]):
-            print("--------------------------------------")
-            print(
-                "{} | {}: {:>7.2f} MWmed".format(
-                    tgu["name"], g_t.name, g_t[i].value()[0]
-                )
-            )
-        print("======================================")
-        print(
-            """{}: {:.2f} MWmed\nMarginal Cost: {:.2f}\n======================================\n
-        """.format(
-                shortage.name,
-                shortage[0].value()[0],
-                constraints[n_hgu].multiplier.value[0],
-            )
-        )
+        logger_service.spd_result(total_cost=round(objective_function.value()[0], 2),
+                                  future_cost=round(alpha[0].value()[0], 2),
+                                  hydro_units=system_data["hydro_units"],
+                                  thermal_units=system_data["thermal_units"],
+                                  final_volume=v_f,
+                                  turbined_volume=v_t,
+                                  shedded_volume=v_v,
+                                  constraints=constraints,
+                                  power_generated=g_t,
+                                  shortage=shortage)
 
     return {
-        "total_cost": objective_function.value()[0],  # type: ignore
-        "future_cost": alpha[0].value()[0],
-        "operational_marginal_cost": constraints[n_hgu].multiplier.value[0],
-        "shortage": shortage[0].value()[0],
+        "stage": stage,
+        "total_cost": round(float(objective_function.value()[0]), 2),  # type: ignore
+        "future_cost": round(float(alpha[0].value()[0]), 2),
+        "operational_marginal_cost": round(
+            float(constraints[n_hgu].multiplier.value[0]), 2
+        ),
+        "shortage": round(float(shortage[0].value()[0]), 2),
         "hydro_units": [
             {
                 "name": system_data["hydro_units"][i]["name"],
-                "v_f": v_f[i].value()[0],
-                "v_t": v_t[i].value()[0],
-                "v_v": v_v[i].value()[0],
-                "water_marginal_cost": constraints[i].multiplier.value[0],
+                "stage": stage,
+                "v_i": round(float(v_i[i]), 2),
+                "inflow": round(float(inflow[i]), 2),
+                "v_f": round(float(v_f[i].value()[0]), 2),
+                "v_t": round(float(v_t[i].value()[0]), 2),
+                "v_v": round(float(v_v[i].value()[0]), 2),
+                "water_marginal_cost": -round(
+                    float(constraints[i].multiplier.value[0]), 2
+                ),
             }
             for i in range(n_hgu)
         ],
-        "thermal_units": [{"g_t": g_t[i].value()[0]} for i in range(n_tgu)],
+        "thermal_units": [
+            {"g_t": round(float(g_t[i].value()[0]), 2)} for i in range(n_tgu)
+        ],
     }
-
-
-def plot_future_cost_function(operation: pd.DataFrame):
-
-    n_stages = operation["stage"].unique().size
-
-    fig = make_subplots(rows=n_stages, cols=1)
-
-    for i, stage in enumerate(operation["stage"].unique()):
-        stage_df = operation.loc[operation["stage"] == stage]
-        fig.add_trace(
-            go.Scatter(
-                x=stage_df["initial_volume"],
-                y=stage_df["average_cost"],
-                mode="lines",
-                name="Stage {}".format(stage),
-            ),
-            row=i + 1,
-            col=1,
-        )
-
-    fig.update_xaxes(title_text="Final Volume [hm3]")
-    fig.update_yaxes(title_text="$/MW")
-
-    fig.update_layout(height=300 * n_stages, title_text="Future Cost Function")
-    fig.show()
-
-
-def plot_ulp(
-    gu_operation: pd.DataFrame, yaxis_column: str, yaxis_title: str, plot_title: str
-):
-
-    n_gu = gu_operation["name"].unique().size
-
-    fig = make_subplots(rows=n_gu, cols=1)
-
-    for i, gu in enumerate(gu_operation["name"].unique()):
-        gu_df = gu_operation.loc[gu_operation["name"] == gu]
-        fig.add_trace(
-            go.Scatter(
-                x=gu_df["stage"],
-                y=gu_df[yaxis_column],
-                mode="lines",
-                name="{}".format(gu),
-            ),
-            row=i + 1,
-            col=1,
-        )
-
-    fig.update_xaxes(title_text="Stages")
-    fig.update_yaxes(title_text=yaxis_title)
-
-    fig.update_layout(height=300 * n_gu, title_text=plot_title)
-    fig.show()

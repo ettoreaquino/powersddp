@@ -7,7 +7,7 @@ from powersddp import PowerSystem
 class TestSystem(TestCase):
     def test_PowerSystem_should_load_from_file(self):
         with self.subTest():
-            System = PowerSystem(path="system.yml")
+            System = PowerSystem(path="systems-data/system.yml")
 
             # Structure
             self.assertEqual(type(System.data), dict)
@@ -123,7 +123,7 @@ class TestSystem(TestCase):
 
     def test_PowerSystem_should_dispatch_two_hgus_using_ulp(self):
         with self.subTest():
-            System = PowerSystem(path="system-2hgu.yml")
+            System = PowerSystem(path="systems-data/system-2hgu.yml")
 
             # Dispatching
             operation = System.dispatch(solver="ulp", scenario=1)

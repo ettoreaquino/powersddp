@@ -36,12 +36,13 @@ import numpy as np
 import pandas as pd
 import yaml
 
-from powersddp.utils._yml import YmlLoader
-from powersddp.utils._solver import (
+from powersddp.service.system.api import (logger_service)
+from powersddp.service.solver.api import (plot_service)
+from powersddp.util._yml import YmlLoader
+
+from powersddp.core.solver import (
     ulp,
     sdp,
-    plot_future_cost_function,
-    plot_ulp,
 )
 
 
@@ -123,8 +124,7 @@ class PowerSystem(PowerSystemInterface):
         solver: str = "sdp",
         plot: bool = False,
         verbose: bool = False,
-        scenario: int = 0,
-    ):
+        scenario: int = 0):
         """Solves a financial dispatch of a Power System class
 
         Once instantiated a Power System can deploy the generation units based on the
@@ -182,33 +182,38 @@ class PowerSystem(PowerSystemInterface):
                             inflow.append(hgu["inflow_scenarios"][stage - 1][scenario])
 
                         if verbose:
-                            print(
-                                "STAGE: {} | DISC.: {}% | SCENARIO: {}".format(
-                                    stage, int(discretization[0]), scenario
-                                )
+                            logger_service.iteration(
+                                stage=stage,
+                                discretization=int(discretization[0]),
+                                scenario=scenario,
                             )
                         result = sdp(
                             system_data=self.data,
                             v_i=v_i,
                             inflow=inflow,
                             cuts=cuts,
-                            stage=stage + 1,
+                            stage=stage,
+
                             verbose=verbose,
                         )
                         complete_result.append(result)
 
                         average += result["total_cost"]
+
+                        # Average Marginal Cost / HGU
                         for i, hgu in enumerate(result["hydro_units"]):
                             avg_water_marginal_cost[i] += hgu["water_marginal_cost"]
 
                     # Calculating the average of the scenarios
                     average = average / self.data["scenarios"]
+
                     coef_b = average
                     for i, hgu in enumerate(result["hydro_units"]):
                         # ! Invert the coefficient because of the minimization problem inverts the signal
                         avg_water_marginal_cost[i] = (
-                            -avg_water_marginal_cost[i] / self.data["scenarios"]
+                            avg_water_marginal_cost[i] / self.data["scenarios"]
                         )
+
                         coef_b -= v_i[i] * avg_water_marginal_cost[i]
 
                         cuts.append(
@@ -226,6 +231,7 @@ class PowerSystem(PowerSystemInterface):
                                     int(discretization[i])
                                 ),
                                 "initial_volume": v_i[i],
+                                "avg_water_marginal_cost": avg_water_marginal_cost[i],
                                 "average_cost": round(average, 2),
                             }
                         )
@@ -233,7 +239,7 @@ class PowerSystem(PowerSystemInterface):
             operation_df = pd.DataFrame(operation)
 
             if n_hgu == 1 and plot:
-                plot_future_cost_function(operation=operation_df)
+                plot_service.sdp(operation=operation)
 
             return operation_df, complete_result
 
@@ -247,16 +253,16 @@ class PowerSystem(PowerSystemInterface):
                     )
 
                     if plot:
-                        plot_ulp(
-                            gu_operation=result["hydro_units"],
+                        plot_service.ulp(
+                            operation=result["hydro_units"],
                             yaxis_column="vf",
                             yaxis_title="HGU Volume (hm3)",
                             plot_title="HGU Stored Volume on Scenario {}".format(
                                 scn + 1
                             ),
                         )
-                        plot_ulp(
-                            gu_operation=result["thermal_units"],
+                        plot_service.ulp(
+                            operation=result["thermal_units"],
                             yaxis_column="gt",
                             yaxis_title="Power Generation (MWmed)",
                             plot_title="TGU Power Generation on Scenario {}".format(
@@ -271,14 +277,14 @@ class PowerSystem(PowerSystemInterface):
                 )
 
                 if plot:
-                    plot_ulp(
-                        gu_operation=result["hydro_units"],
+                    plot_service.ulp(
+                        operation=result["hydro_units"],
                         yaxis_column="vf",
                         yaxis_title="HGU Volume (hm3)",
                         plot_title="HGUs Stored Volume on Scenario {}".format(scenario),
                     )
-                    plot_ulp(
-                        gu_operation=result["thermal_units"],
+                    plot_service.ulp(
+                        operation=result["thermal_units"],
                         yaxis_column="gt",
                         yaxis_title="Power Generation (MWmed)",
                         plot_title="TGUs Power Generation on Scenario {}".format(

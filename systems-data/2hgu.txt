@@ -1,0 +1,1240 @@
+STAGE: 3 | DISC.: 0% | SCENARIO: 0
+======================================
+Total Cost: $43025.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   15.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   30.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 85.25 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 3 | DISC.: 0% | SCENARIO: 1
+======================================
+Total Cost: $48325.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   11.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   22.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 95.85 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 3 | DISC.: 0% | SCENARIO: 0
+======================================
+Total Cost: $13275.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   15.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   50.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 25.75 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 3 | DISC.: 0% | SCENARIO: 1
+======================================
+Total Cost: $15175.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   11.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   42.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 29.55 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 3 | DISC.: 0% | SCENARIO: 0
+======================================
+Total Cost: $13275.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   15.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:  130.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 25.75 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 3 | DISC.: 0% | SCENARIO: 1
+======================================
+Total Cost: $15175.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   11.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:  122.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 29.55 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 3 | DISC.: 50% | SCENARIO: 0
+======================================
+Total Cost: $24025.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   55.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   30.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 47.25 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 3 | DISC.: 50% | SCENARIO: 1
+======================================
+Total Cost: $29325.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   51.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   22.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 57.85 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 3 | DISC.: 50% | SCENARIO: 0
+======================================
+Total Cost: $127.5
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   55.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    9.50 $/hm3
+HU2 |    Final Volume:   50.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   12.75 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 3 | DISC.: 50% | SCENARIO: 1
+======================================
+Total Cost: $188.75
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   51.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:   23.75 $/hm3
+HU2 |    Final Volume:   42.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    1.55 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -25.00
+======================================
+
+        
+STAGE: 3 | DISC.: 50% | SCENARIO: 0
+======================================
+Total Cost: $127.5
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   55.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    9.50 $/hm3
+HU2 |    Final Volume:  130.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   12.75 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 3 | DISC.: 50% | SCENARIO: 1
+======================================
+Total Cost: $188.75
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   51.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:   23.75 $/hm3
+HU2 |    Final Volume:  122.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    1.55 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -25.00
+======================================
+
+        
+STAGE: 3 | DISC.: 100% | SCENARIO: 0
+======================================
+Total Cost: $21650.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   55.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   30.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 42.50 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 3 | DISC.: 100% | SCENARIO: 1
+======================================
+Total Cost: $25050.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   51.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   22.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 49.30 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 3 | DISC.: 100% | SCENARIO: 0
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   55.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   50.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 3 | DISC.: 100% | SCENARIO: 1
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   51.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   42.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 3 | DISC.: 100% | SCENARIO: 0
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   55.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:  130.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 3 | DISC.: 100% | SCENARIO: 1
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   51.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:  122.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 2 | DISC.: 0% | SCENARIO: 0
+======================================
+Total Cost: $37725.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   19.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   38.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 74.65 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 2 | DISC.: 0% | SCENARIO: 1
+======================================
+Total Cost: $44350.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   14.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   28.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 87.90 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 2 | DISC.: 0% | SCENARIO: 0
+======================================
+Total Cost: $11375.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   19.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   58.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 21.95 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 2 | DISC.: 0% | SCENARIO: 1
+======================================
+Total Cost: $13750.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   14.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   48.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 26.70 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 2 | DISC.: 0% | SCENARIO: 0
+======================================
+Total Cost: $11375.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   19.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:  138.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 21.95 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 2 | DISC.: 0% | SCENARIO: 1
+======================================
+Total Cost: $13750.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   14.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:  128.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 26.70 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 2 | DISC.: 50% | SCENARIO: 0
+======================================
+Total Cost: $18725.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   59.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   38.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 36.65 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 2 | DISC.: 50% | SCENARIO: 1
+======================================
+Total Cost: $25350.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   54.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   28.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 49.90 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 2 | DISC.: 50% | SCENARIO: 0
+======================================
+Total Cost: $89.5
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   59.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    9.50 $/hm3
+HU2 |    Final Volume:   58.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.95 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 2 | DISC.: 50% | SCENARIO: 1
+======================================
+Total Cost: $137.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   54.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    9.50 $/hm3
+HU2 |    Final Volume:   48.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   13.70 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 2 | DISC.: 50% | SCENARIO: 0
+======================================
+Total Cost: $89.5
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   59.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    9.50 $/hm3
+HU2 |    Final Volume:  138.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.95 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 2 | DISC.: 50% | SCENARIO: 1
+======================================
+Total Cost: $137.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   54.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    9.50 $/hm3
+HU2 |    Final Volume:  128.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   13.70 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 2 | DISC.: 100% | SCENARIO: 0
+======================================
+Total Cost: $18250.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   59.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   38.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 35.70 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 2 | DISC.: 100% | SCENARIO: 1
+======================================
+Total Cost: $22500.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   54.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   28.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 44.20 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 2 | DISC.: 100% | SCENARIO: 0
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   59.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   58.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 2 | DISC.: 100% | SCENARIO: 1
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   54.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   48.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 2 | DISC.: 100% | SCENARIO: 0
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   59.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:  138.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 2 | DISC.: 100% | SCENARIO: 1
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   54.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:  128.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 1 | DISC.: 0% | SCENARIO: 0
+======================================
+Total Cost: $32425.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   23.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   46.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 64.05 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 1 | DISC.: 0% | SCENARIO: 1
+======================================
+Total Cost: $41700.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   16.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   32.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 82.60 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 1 | DISC.: 0% | SCENARIO: 0
+======================================
+Total Cost: $9475.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   23.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   66.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 18.15 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 1 | DISC.: 0% | SCENARIO: 1
+======================================
+Total Cost: $12800.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   16.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   52.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 24.80 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 1 | DISC.: 0% | SCENARIO: 0
+======================================
+Total Cost: $9475.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   23.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:  146.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 18.15 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 1 | DISC.: 0% | SCENARIO: 1
+======================================
+Total Cost: $12800.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   16.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:  132.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 24.80 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 1 | DISC.: 50% | SCENARIO: 0
+======================================
+Total Cost: $14850.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   23.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   46.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 28.90 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 1 | DISC.: 50% | SCENARIO: 1
+======================================
+Total Cost: $22700.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   56.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:  475.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   32.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 44.60 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 1 | DISC.: 50% | SCENARIO: 0
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   23.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   66.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 1 | DISC.: 50% | SCENARIO: 1
+======================================
+Total Cost: $118.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   56.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    9.50 $/hm3
+HU2 |    Final Volume:   52.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   11.80 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 1 | DISC.: 50% | SCENARIO: 0
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   23.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:  146.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 1 | DISC.: 50% | SCENARIO: 1
+======================================
+Total Cost: $118.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   20.00 hm3
+HU1 |   Turbined Flow:   56.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    9.50 $/hm3
+HU2 |    Final Volume:  132.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   11.80 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 1 | DISC.: 100% | SCENARIO: 0
+======================================
+Total Cost: $14850.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   63.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   46.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 28.90 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 1 | DISC.: 100% | SCENARIO: 1
+======================================
+Total Cost: $20800.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   56.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   40.00 hm3
+HU2 |   Turbined Flow:   32.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:  425.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:   15.00 MWmed
+--------------------------------------
+GT2 | Power Generated:   10.00 MWmed
+======================================
+Power Shortage: 40.80 MWmed
+Marginal Cost: -500.00
+======================================
+
+        
+STAGE: 1 | DISC.: 100% | SCENARIO: 0
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   63.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   66.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 1 | DISC.: 100% | SCENARIO: 1
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   56.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:   52.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 1 | DISC.: 100% | SCENARIO: 0
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   63.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:  146.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
+
+        
+STAGE: 1 | DISC.: 100% | SCENARIO: 1
+======================================
+Total Cost: $80.0
+Future Cost: $0.0
+======================================
+HU1 |    Final Volume:   56.00 hm3
+HU1 |   Turbined Flow:   60.00 hm3
+HU1 |       Shed Flow:    0.00 hm3
+HU1 |      Water Cost:    0.00 $/hm3
+HU2 |    Final Volume:  132.00 hm3
+HU2 |   Turbined Flow:  100.00 hm3
+HU2 |       Shed Flow:    0.00 hm3
+HU2 |      Water Cost:    0.00 $/hm3
+--------------------------------------
+GT1 | Power Generated:    8.00 MWmed
+--------------------------------------
+GT2 | Power Generated:    0.00 MWmed
+======================================
+Power Shortage: 0.00 MWmed
+Marginal Cost: -10.00
+======================================
