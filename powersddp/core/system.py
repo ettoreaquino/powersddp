@@ -31,12 +31,9 @@ thermal_units: !include system-thermal.yml
 """
 
 from abc import ABC, abstractmethod
-from itertools import product
-import numpy as np
-import pandas as pd
 import yaml
 
-from powersddp.service.system.api import plot_service, result_service, solver_service
+from powersddp.service.system.api import (plot_service, result_service, solver_service)
 
 from powersddp.util._yml import YmlLoader
 
@@ -148,96 +145,12 @@ class PowerSystem(PowerSystemInterface):
         """
 
         if solver == "sdp":
-            n_hgu = len(self.data["hydro_units"])
+            operation_df = solver_service.sdp(system_data=self.data,
+                                              verbose=verbose)
 
-            step = 100 / (self.data["discretizations"] - 1)
-            discretizations = list(
-                product(np.arange(0, 100 + step, step), repeat=n_hgu)
-            )
-
-            operation = []
-            complete_result = []
-            cuts = []  # type: ignore
-            for stage in range(self.data["stages"], 0, -1):
-                for discretization in discretizations:
-
-                    v_i = []
-                    # For Every Hydro Unit
-                    for i, hgu in enumerate(self.data["hydro_units"]):
-                        v_i.append(
-                            hgu["v_min"]
-                            + (hgu["v_max"] - hgu["v_min"]) * discretization[i] / 100
-                        )
-
-                    # For Every Scenario
-                    average = 0.0
-                    avg_water_marginal_cost = [0 for _ in self.data["hydro_units"]]
-                    for scenario in range(self.data["scenarios"]):
-                        inflow = []
-                        for i, hgu in enumerate(self.data["hydro_units"]):
-                            inflow.append(hgu["inflow_scenarios"][stage - 1][scenario])
-
-                        if verbose:
-                            result_service.iteration(
-                                stage=stage,
-                                discretization=int(discretization[0]),
-                                scenario=scenario,
-                            )
-                        result = solver_service.sdp(
-                            system_data=self.data,
-                            v_i=v_i,
-                            inflow=inflow,
-                            cuts=cuts,
-                            stage=stage,
-                            verbose=verbose,
-                        )
-                        complete_result.append(result)
-
-                        average += result["total_cost"]
-
-                        # Average Marginal Cost / HGU
-                        for i, hgu in enumerate(result["hydro_units"]):
-                            avg_water_marginal_cost[i] += hgu["water_marginal_cost"]
-
-                    # Calculating the average of the scenarios
-                    average = average / self.data["scenarios"]
-
-                    coef_b = average
-                    for i, hgu in enumerate(result["hydro_units"]):
-                        # ! Invert the coefficient because of the minimization problem inverts the signal
-                        avg_water_marginal_cost[i] = (
-                            avg_water_marginal_cost[i] / self.data["scenarios"]
-                        )
-
-                        coef_b -= v_i[i] * avg_water_marginal_cost[i]
-
-                        cuts.append(
-                            {
-                                "stage": stage,
-                                "coef_b": coef_b,
-                                "coefs": avg_water_marginal_cost,
-                            }
-                        )
-                        operation.append(
-                            {
-                                "stage": stage,
-                                "name": self.data["hydro_units"][i]["name"],
-                                "storage_percentage": "{}%".format(
-                                    int(discretization[i])
-                                ),
-                                "initial_volume": v_i[i],
-                                "avg_water_marginal_cost": avg_water_marginal_cost[i],
-                                "average_cost": round(average, 2),
-                            }
-                        )
-            self.cuts = cuts
-            operation_df = pd.DataFrame(operation)
-
-            if n_hgu == 1 and plot:
+            if len(self.data['hydro_units']) == 1 and plot:
                 plot_service.sdp(operation=operation_df)
-
-            return operation_df
-
+                   
         elif solver == "ulp":
             if scenario == 0:
                 for scn in range(self.data["scenarios"]):
