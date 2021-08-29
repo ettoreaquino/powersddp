@@ -42,11 +42,11 @@ def ulp_result(stages: int,
                constraints: object,
                power_generated: object,
                shortage: object):
-    print("=========== SCENARIO {} ===========".format(scenario))
+    print("============ SCENARIO {} ===========".format(scenario))
     print("{:>21}: ${:>.2f}".format('Total Cost', total_cost))  # type: ignore
     print("===================================")
-    for stage in range(1, stages + 1):
-        print("=========== STAGE {} ===========".format(stage))
+    for stage in range(stages):
+        print("-------------- STAGE {} ------------".format(stage+1))
         for i, hgu in enumerate(hydro_units):
             _add_row(name=hgu["name"], title='Final Volume', value=final_volume[i][stage].value()[0])
             _add_row(name=hgu["name"], title='Turbined Volume', value=turbined_volume[i][stage].value()[0])
@@ -55,8 +55,7 @@ def ulp_result(stages: int,
 
         print("-----------------------------------")
         for i, tgu in enumerate(thermal_units):
-            _add_row(name=tgu["name"], title='Power Generated', value=power_generated[i].value()[0])
-        print("===================================")
+            _add_row(name=tgu["name"], title='Power Generated', value=power_generated[i][stage].value()[0])
     print("===================================")
     print("{:>21}: {:.2f} MWmed".format('Power Shortage', shortage[0].value()[0]))
     print("{:>21}: {:.2f}".format('Marginal Cost', constraints[len(hydro_units)].multiplier.value[0]))
