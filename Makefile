@@ -1,7 +1,3 @@
-test:
-	@poetry run pytest 
-	@poetry run mypy .
-
 clean:
 	@rm -rf build dist .eggs *.egg-info
 	@rm -rf .benchmarks .coverage coverage.xml htmlcov report.xml .tox
@@ -13,6 +9,12 @@ clean:
 
 format: clean
 	@poetry run black powersddp/ tests/
+
+run-test:
+	@poetry run pytest 
+	@poetry run mypy .
+
+test: run-test clean
 
 check:
 	@poetry check

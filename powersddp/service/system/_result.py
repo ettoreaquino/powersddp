@@ -1,6 +1,13 @@
 from typing import Any
 
 
+def iteration(stage: int, discretization: int, scenario: int):
+    print("===================================")
+    print(
+        "STAGE: {} | DISC.: {}% | SCENARIO: {}".format(stage, discretization, scenario)
+    )
+
+
 def _add_row(name: str, title: str, value: float):
     fmt = "{} | {:>15s}: {:>7.2f} hm3"
     print(fmt.format(name, title, value))

@@ -36,8 +36,7 @@ import numpy as np
 import pandas as pd
 import yaml
 
-from powersddp.service.solver.api import algorithm_service, plot_service
-from powersddp.service.system.api import logger_service
+from powersddp.service.system.api import plot_service, result_service, solver_service
 
 from powersddp.util._yml import YmlLoader
 
@@ -179,12 +178,12 @@ class PowerSystem(PowerSystemInterface):
                             inflow.append(hgu["inflow_scenarios"][stage - 1][scenario])
 
                         if verbose:
-                            logger_service.iteration(
+                            result_service.iteration(
                                 stage=stage,
                                 discretization=int(discretization[0]),
                                 scenario=scenario,
                             )
-                        result = algorithm_service.sdp(
+                        result = solver_service.sdp(
                             system_data=self.data,
                             v_i=v_i,
                             inflow=inflow,
@@ -242,7 +241,7 @@ class PowerSystem(PowerSystemInterface):
         elif solver == "ulp":
             if scenario == 0:
                 for scn in range(self.data["scenarios"]):
-                    result = algorithm_service.ulp(
+                    result = solver_service.ulp(
                         system_data=self.data,
                         scenario=scn,
                         verbose=verbose,
@@ -266,7 +265,7 @@ class PowerSystem(PowerSystemInterface):
                             ),
                         )
             else:
-                result = algorithm_service.ulp(
+                result = solver_service.ulp(
                     system_data=self.data,
                     scenario=scenario - 1,
                     verbose=verbose,

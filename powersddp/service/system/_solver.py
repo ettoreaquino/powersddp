@@ -2,7 +2,7 @@ import cvxopt.modeling as model
 import pandas as pd
 from cvxopt import solvers
 
-import powersddp.service.solver._logging as logger_service
+import powersddp.service.system._result as result_service
 
 solvers.options["glpk"] = dict(msg_lev="GLP_MSG_OFF")
 
@@ -108,7 +108,7 @@ def sdp(
     opt_problem.solve(format="dense", solver="glpk")
 
     if verbose:
-        logger_service.spd_result(
+        result_service.spd_result(
             total_cost=round(objective_function.value()[0], 2),  # type: ignore
             future_cost=round(alpha[0].value()[0], 2),
             hydro_units=system_data["hydro_units"],
@@ -262,7 +262,7 @@ def ulp(
 
     ## Print
     if verbose:
-        logger_service.ulp_result(
+        result_service.ulp_result(
             stages=system_data["stages"],
             scenario=scenario + 1,
             total_cost=round(objective_function.value()[0], 2),  # type: ignore
