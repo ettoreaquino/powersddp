@@ -1,3 +1,6 @@
+from typing import Any
+
+
 def _add_row(name: str, title: str, value: float):
     fmt = "{} | {:>15s}: {:>7.2f} hm3"
     print(fmt.format(name, title, value))
@@ -8,15 +11,15 @@ def spd_result(
     future_cost: float,
     hydro_units: list,
     thermal_units: list,
-    final_volume: object,
-    turbined_volume: object,
-    shedded_volume: object,
-    constraints: object,
-    power_generated: object,
-    shortage: object,
+    final_volume: Any,
+    turbined_volume: Any,
+    shedded_volume: Any,
+    constraints: Any,
+    power_generated: Any,
+    shortage: Any,
 ):
     print("===================================")
-    print("{:>21}: ${:>.2f}".format("Total Cost", total_cost))  # type: ignore
+    print("{:>21}: ${:>.2f}".format("Total Cost", total_cost))
     print("{:>21}: ${:.2f}".format("Future Cost", future_cost))
     print("===================================")
     for i, hgu in enumerate(hydro_units):
@@ -61,15 +64,15 @@ def ulp_result(
     total_cost: float,
     hydro_units: list,
     thermal_units: list,
-    final_volume: object,
-    turbined_volume: object,
-    shedded_volume: object,
-    constraints: object,
-    power_generated: object,
-    shortage: object,
+    final_volume: Any,
+    turbined_volume: Any,
+    shedded_volume: Any,
+    constraints: Any,
+    power_generated: Any,
+    shortage: Any,
 ):
     print("============ SCENARIO {} ===========".format(scenario))
-    print("{:>21}: ${:>.2f}".format("Total Cost", total_cost))  # type: ignore
+    print("{:>21}: ${:>.2f}".format("Total Cost", total_cost))
     print("===================================")
     for stage in range(stages):
         print("-------------- STAGE {} ------------".format(stage + 1))

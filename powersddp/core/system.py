@@ -36,15 +36,10 @@ import numpy as np
 import pandas as pd
 import yaml
 
-from powersddp.service.system.api import logger_service
 from powersddp.service.solver.api import algorithm_service, plot_service
+from powersddp.service.system.api import logger_service
 
 from powersddp.util._yml import YmlLoader
-
-from powersddp.core.solver import (
-    ulp,
-    sdp,
-)
 
 
 class PowerSystemInterface(ABC):
@@ -271,7 +266,7 @@ class PowerSystem(PowerSystemInterface):
                             ),
                         )
             else:
-                result = ulp(
+                result = algorithm_service.ulp(
                     system_data=self.data,
                     scenario=scenario - 1,
                     verbose=verbose,
