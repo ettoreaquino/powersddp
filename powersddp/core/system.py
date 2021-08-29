@@ -37,7 +37,11 @@ import pandas as pd
 import yaml
 
 from powersddp.service.system.api import (logger_service)
-from powersddp.service.solver.api import (plot_service)
+from powersddp.service.solver.api import (
+    algorithm_service,
+    plot_service
+)
+
 from powersddp.util._yml import YmlLoader
 
 from powersddp.core.solver import (
@@ -187,13 +191,12 @@ class PowerSystem(PowerSystemInterface):
                                 discretization=int(discretization[0]),
                                 scenario=scenario,
                             )
-                        result = sdp(
+                        result = algorithm_service.sdp(
                             system_data=self.data,
                             v_i=v_i,
                             inflow=inflow,
                             cuts=cuts,
                             stage=stage,
-
                             verbose=verbose,
                         )
                         complete_result.append(result)
@@ -239,14 +242,14 @@ class PowerSystem(PowerSystemInterface):
             operation_df = pd.DataFrame(operation)
 
             if n_hgu == 1 and plot:
-                plot_service.sdp(operation=operation)
+                plot_service.sdp(operation=operation_df)
 
-            return operation_df, complete_result
+            return operation_df
 
         elif solver == "ulp":
             if scenario == 0:
                 for scn in range(self.data["scenarios"]):
-                    result = ulp(
+                    result = algorithm_service.ulp(
                         system_data=self.data,
                         scenario=scn,
                         verbose=verbose,

@@ -137,49 +137,6 @@ def ulp(
                                   constraints=constraints,
                                   power_generated=g_t,
                                   shortage=shortage)
-        # print("============ SCENARIO {} =============".format(scenario + 1))
-        # print("Total Cost (All stages): ${}".format(round(objective_function.value()[0], 2)))  # type: ignore
-        # print("======================================\n")
-        # for stage in range(system_data["stages"]):
-        #     print("============== STAGE {} ==============".format(stage + 1))
-        #     for i, hgu in enumerate(system_data["hydro_units"]):
-        #         print(
-        #             "{} | {:>15s}: {:>7.2f} hm3".format(
-        #                 hgu["name"], v_f[i].name, v_f[i][stage].value()[0]
-        #             )
-        #         )
-        #         print(
-        #             "{} | {:>15s}: {:>7.2f} hm3".format(
-        #                 hgu["name"], v_t[i].name, v_t[i][stage].value()[0]
-        #             )
-        #         )
-        #         print(
-        #             "{} | {:>15s}: {:>7.2f} hm3".format(
-        #                 hgu["name"], v_v[i].name, v_v[i][stage].value()[0]
-        #             )
-        #         )
-        #         print(
-        #             "{} | {:>15s}: {:>7.2f} $/hm3".format(
-        #                 hgu["name"], "Water Cost", constraints[i].multiplier.value[0]
-        #             )
-        #         )
-
-        #     for i, tgu in enumerate(system_data["thermal_units"]):
-        #         print("--------------------------------------")
-        #         print(
-        #             "{} | {}: {:>7.2f} MWmed".format(
-        #                 tgu["name"], g_t[i].name, g_t[i][stage].value()[0]
-        #             )
-        #         )
-        #     print("======================================\n")
-        # print(
-        #     """======================================\n{}: {:.2f} MWmed\nMarginal Cost: {:.2f}\n======================================\n
-        # """.format(
-        #         shortage.name,
-        #         shortage[0].value()[0],
-        #         constraints[n_hgu].multiplier.value[0],
-        #     )
-        # )
 
     hgu_results, tgu_results = [], []
     for stage in range(system_data["stages"]):

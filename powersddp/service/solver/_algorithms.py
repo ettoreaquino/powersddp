@@ -1,6 +1,8 @@
 import cvxopt.modeling as model
+import pandas as pd
 
-from powersddp.service.solver.api import (logger_service)
+
+import powersddp.service.solver._logging as logger_service
 
 # Stochastic Dual Programming
 def sdp(
@@ -141,4 +143,158 @@ def sdp(
         "thermal_units": [
             {"g_t": round(float(g_t[i].value()[0]), 2)} for i in range(n_tgu)
         ],
+    }
+
+def ulp(
+    system_data: dict,
+    scenario: int = 0,
+    verbose: bool = False,
+):
+    """Unique Linear Programming Solver
+
+    Parameters
+    ----------
+    system_data : dict,
+        Dict containing data structured as used to instantiate a PowerSystem.
+    scenario: int,
+        Inflow scenario index.
+    verbose : bool, optional
+        Dictionary containing the structured data of the system.
+
+    Returns
+    -------
+    operation : dict
+        A dictionary representing the operation
+    """
+
+    n_hgu = len(system_data["hydro_units"])
+    n_tgu = len(system_data["thermal_units"])
+    ## Initializing Model Variables
+    v_f = []
+    v_t = []
+    v_v = []
+    g_t = []
+    ### Hydro Units variables
+    for _, hgu in enumerate(system_data["hydro_units"]):
+        v_f.append(model.variable(system_data["stages"], "Final Volume"))
+        v_t.append(
+            model.variable(
+                system_data["stages"],
+                "Turbined Flow",
+            )
+        )
+        v_v.append(
+            model.variable(
+                system_data["stages"],
+                "Shed Flow",
+            )
+        )
+    ### Thermal Units variables
+    for _, tgu in enumerate(system_data["thermal_units"]):
+        g_t.append(
+            model.variable(
+                system_data["stages"],
+                "Power Generated",
+            )
+        )
+    ### Shortage variable
+    shortage = model.variable(system_data["stages"], "Power Shortage")
+    ## Objective Function
+    objective_function = 0
+    for stage in range(system_data["stages"]):
+        objective_function += system_data["outage_cost"] * shortage[stage]
+        for i, tgu in enumerate(system_data["thermal_units"]):
+            objective_function += tgu["cost"] * g_t[i][stage]
+        for i, _ in enumerate(system_data["hydro_units"]):
+            objective_function += 0.01 * v_v[i][stage]
+
+    ## Constraints
+    ### Hydro Balance
+    constraints = []
+    for i, hgu in enumerate(system_data["hydro_units"]):
+        for stage in range(system_data["stages"]):
+            if stage == 0:
+                constraints.append(
+                    v_f[i][stage]
+                    == float(hgu["v_ini"])
+                    + float(hgu["inflow_scenarios"][stage][scenario])
+                    - v_t[i][stage]
+                    - v_v[i][stage]
+                )
+            else:
+                constraints.append(
+                    v_f[i][stage]
+                    == v_f[i][stage - 1]
+                    + float(hgu["inflow_scenarios"][stage][scenario])
+                    - v_t[i][stage]
+                    - v_v[i][stage]
+                )
+    ### Load Supply
+    for stage in range(system_data["stages"]):
+        load_supply = 0
+        for i, hgu in enumerate(system_data["hydro_units"]):
+            load_supply += hgu["prod"] * v_t[i][stage]
+        for i, _ in enumerate(system_data["thermal_units"]):
+            load_supply += g_t[i][stage]
+        load_supply += shortage[stage]
+        constraints.append(load_supply == system_data["load"][stage])
+    ### Bounds
+    for stage in range(system_data["stages"]):
+        for i, hgu in enumerate(system_data["hydro_units"]):
+            constraints.append(v_f[i][stage] >= hgu["v_min"])
+            constraints.append(v_f[i][stage] <= hgu["v_max"])
+            constraints.append(v_t[i][stage] >= 0)
+            constraints.append(v_t[i][stage] <= hgu["flow_max"])
+            constraints.append(v_v[i][stage] >= 0)
+        for i, tgu in enumerate(system_data["thermal_units"]):
+            constraints.append(g_t[i][stage] >= 0)
+            constraints.append(g_t[i][stage] <= tgu["capacity"])
+        constraints.append(shortage[stage] >= 0)
+
+    ## Solving
+    opt_problem = model.op(objective=objective_function, constraints=constraints)
+    opt_problem.solve(format="dense", solver="glpk")
+
+    ## Print
+    if verbose:
+        logger_service.ulp_result(stages=system_data["stages"],
+                                  scenario=scenario+1,
+                                  total_cost=round(objective_function.value()[0], 2),
+                                  hydro_units=system_data["hydro_units"],
+                                  thermal_units=system_data["thermal_units"],
+                                  final_volume=v_f,
+                                  turbined_volume=v_t,
+                                  shedded_volume=v_v,
+                                  constraints=constraints,
+                                  power_generated=g_t,
+                                  shortage=shortage)
+
+    hgu_results, tgu_results = [], []
+    for stage in range(system_data["stages"]):
+        for i in range(n_hgu):
+            hgu_results.append(
+                {
+                    "stage": stage + 1,
+                    "name": system_data["hydro_units"][i]["name"],
+                    "vf": round(v_f[i][stage].value()[0], 3),
+                    "vt": round(v_t[i][stage].value()[0], 3),
+                    "vv": round(v_v[i][stage].value()[0], 3),
+                    "wmc": round(constraints[i].multiplier.value[0], 3),
+                }
+            )
+        for i in range(n_tgu):
+            tgu_results.append(
+                {
+                    "stage": stage + 1,
+                    "name": system_data["thermal_units"][i]["name"],
+                    "gt": round(g_t[i][stage].value()[0], 3),
+                }
+            )
+
+    return {
+        "total_cost": objective_function.value()[0],  # type: ignore
+        "operational_marginal_cost": constraints[n_hgu].multiplier.value[0],
+        "shortage": shortage[0].value()[0],
+        "hydro_units": pd.DataFrame(hgu_results),
+        "thermal_units": pd.DataFrame(tgu_results),
     }
