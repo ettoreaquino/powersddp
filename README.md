@@ -1,7 +1,5 @@
 [![PyPI version](https://badge.fury.io/py/powersddp.svg)](https://badge.fury.io/py/powersddp)
-
 [![Python versions](https://img.shields.io/pypi/pyversions/powersddp.svg)](https://pypi.python.org/pypi/powersddp)
-
 [![Downloads](https://pepy.tech/badge/powersddp)](https://pepy.tech/project/powersddp)
 
 
