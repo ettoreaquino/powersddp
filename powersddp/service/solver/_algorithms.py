@@ -11,7 +11,7 @@ def sdp(
     inflow: list,
     cuts: list,
     stage: int,
-    verbose: bool = False
+    verbose: bool = False,
 ):
     """Stochastic Dual Programming Solver
 
@@ -106,16 +106,18 @@ def sdp(
     opt_problem.solve(format="dense", solver="glpk")
 
     if verbose:
-        logger_service.spd_result(total_cost=round(objective_function.value()[0], 2),
-                                  future_cost=round(alpha[0].value()[0], 2),
-                                  hydro_units=system_data["hydro_units"],
-                                  thermal_units=system_data["thermal_units"],
-                                  final_volume=v_f,
-                                  turbined_volume=v_t,
-                                  shedded_volume=v_v,
-                                  constraints=constraints,
-                                  power_generated=g_t,
-                                  shortage=shortage)
+        logger_service.spd_result(
+            total_cost=round(objective_function.value()[0], 2),
+            future_cost=round(alpha[0].value()[0], 2),
+            hydro_units=system_data["hydro_units"],
+            thermal_units=system_data["thermal_units"],
+            final_volume=v_f,
+            turbined_volume=v_t,
+            shedded_volume=v_v,
+            constraints=constraints,
+            power_generated=g_t,
+            shortage=shortage,
+        )
 
     return {
         "stage": stage,
@@ -144,6 +146,7 @@ def sdp(
             {"g_t": round(float(g_t[i].value()[0]), 2)} for i in range(n_tgu)
         ],
     }
+
 
 def ulp(
     system_data: dict,
@@ -257,17 +260,19 @@ def ulp(
 
     ## Print
     if verbose:
-        logger_service.ulp_result(stages=system_data["stages"],
-                                  scenario=scenario+1,
-                                  total_cost=round(objective_function.value()[0], 2),
-                                  hydro_units=system_data["hydro_units"],
-                                  thermal_units=system_data["thermal_units"],
-                                  final_volume=v_f,
-                                  turbined_volume=v_t,
-                                  shedded_volume=v_v,
-                                  constraints=constraints,
-                                  power_generated=g_t,
-                                  shortage=shortage)
+        logger_service.ulp_result(
+            stages=system_data["stages"],
+            scenario=scenario + 1,
+            total_cost=round(objective_function.value()[0], 2),
+            hydro_units=system_data["hydro_units"],
+            thermal_units=system_data["thermal_units"],
+            final_volume=v_f,
+            turbined_volume=v_t,
+            shedded_volume=v_v,
+            constraints=constraints,
+            power_generated=g_t,
+            shortage=shortage,
+        )
 
     hgu_results, tgu_results = [], []
     for stage in range(system_data["stages"]):

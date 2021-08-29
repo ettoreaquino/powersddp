@@ -36,11 +36,8 @@ import numpy as np
 import pandas as pd
 import yaml
 
-from powersddp.service.system.api import (logger_service)
-from powersddp.service.solver.api import (
-    algorithm_service,
-    plot_service
-)
+from powersddp.service.system.api import logger_service
+from powersddp.service.solver.api import algorithm_service, plot_service
 
 from powersddp.util._yml import YmlLoader
 
@@ -128,7 +125,8 @@ class PowerSystem(PowerSystemInterface):
         solver: str = "sdp",
         plot: bool = False,
         verbose: bool = False,
-        scenario: int = 0):
+        scenario: int = 0
+    ):
         """Solves a financial dispatch of a Power System class
 
         Once instantiated a Power System can deploy the generation units based on the

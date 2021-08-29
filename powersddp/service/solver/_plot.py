@@ -3,6 +3,7 @@ import pandas as pd
 
 from plotly.subplots import make_subplots
 
+
 def sdp(operation: pd.DataFrame):
 
     n_stages = operation["stage"].unique().size
@@ -28,10 +29,8 @@ def sdp(operation: pd.DataFrame):
     fig.update_layout(height=300 * n_stages, title_text="Future Cost Function")
     fig.show()
 
-def ulp(operation: pd.DataFrame,
-        yaxis_column: str,
-        yaxis_title: str,
-        plot_title: str):
+
+def ulp(operation: pd.DataFrame, yaxis_column: str, yaxis_title: str, plot_title: str):
 
     n_gu = operation["name"].unique().size
 
