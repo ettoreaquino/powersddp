@@ -7,10 +7,18 @@ authors = ["Ettore Aquino <ettore@ettoreaquino.com>",
            "Pedro Henrique Peters <pedro.peters@engenharia.ufjf.br>"]
 
 repository = "https://github.com/ettoreaquino/powersddp.git"
-
 readme = "README.md"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Hydrology",
+    "Topic :: Utilities"
+]
 
-exclude = ["Makefile","README.rst","Notebook.ipynb"]
+exclude = ["Makefile","Notebook.ipynb", "systems-date"]
+
 
 [tool.poetry.dependencies]
 python = "^3.7"

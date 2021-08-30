@@ -31,19 +31,11 @@ thermal_units: !include system-thermal.yml
 """
 
 from abc import ABC, abstractmethod
-from itertools import product
-import numpy as np
-import pandas as pd
 import yaml
 
-from powersddp.utils._yml import YmlLoader
-from powersddp.utils._solver import (
-    ulp,
-    sdp,
-    plot_future_cost_function,
-    plot_future_cost_3D_function,
-    plot_ulp,
-)
+from powersddp.service.system.api import plot_service, solver_service
+
+from powersddp.util._yml import YmlLoader
 
 
 class PowerSystemInterface(ABC):
@@ -124,7 +116,7 @@ class PowerSystem(PowerSystemInterface):
         solver: str = "sdp",
         plot: bool = False,
         verbose: bool = False,
-        scenario: int = 0,
+        scenario: int = 0
     ):
         """Solves a financial dispatch of a Power System class
 
@@ -153,144 +145,36 @@ class PowerSystem(PowerSystemInterface):
         """
 
         if solver == "sdp":
-            n_hgu = len(self.data["hydro_units"])
+            result = solver_service.sdp(system_data=self.data, verbose=verbose)
 
-            step = 100 / (self.data["discretizations"] - 1)
-            discretizations = list(
-                product(np.arange(0, 100 + step, step), repeat=n_hgu)
-            )
+            if len(self.data["hydro_units"]) == 1 and plot:
+                plot_service.sdp(operation=result["operation_df"])
 
-            if n_hgu == 2:
-                xaxis, yaxis = np.meshgrid(
-                    np.arange(0, 100 + step, step), np.arange(0, 100 + step, step)
-                )
-                costs = []
+            elif len(self.data["hydro_units"]) == 2 and plot:
+                plot_service.sdp_2hgu(operation=result["operation_df"])
 
-            operation = []
-            cuts = []  # type: ignore
-            for stage in range(self.data["stages"], 0, -1):
-
-                if n_hgu == 2:
-                    cost = np.zeros(
-                        (self.data["discretizations"], self.data["discretizations"])
-                    )
-
-                for discretization in discretizations:
-
-                    v_i = []
-                    # For Every Hydro Unit
-                    for i, hgu in enumerate(self.data["hydro_units"]):
-                        v_i.append(
-                            hgu["v_min"]
-                            + (hgu["v_max"] - hgu["v_min"]) * discretization[i] / 100
-                        )
-
-                    # For Every Scenario
-                    average = 0.0
-                    avg_water_marginal_cost = [0 for _ in self.data["hydro_units"]]
-                    for scenario in range(self.data["scenarios"]):
-                        inflow = []
-                        for i, hgu in enumerate(self.data["hydro_units"]):
-                            inflow.append(hgu["inflow_scenarios"][stage - 1][scenario])
-
-                        if verbose:
-                            print(
-                                "STAGE: {} | DISC.: {}% | SCENARIO: {}".format(
-                                    stage, int(discretization[0]), scenario + 1
-                                )
-                            )
-                        result = sdp(
-                            system_data=self.data,
-                            v_i=v_i,
-                            inflow=inflow,
-                            cuts=cuts,
-                            stage=stage + 1,
-                            verbose=verbose,
-                        )
-                        average += result["total_cost"]
-                        for i, hgu in enumerate(result["hydro_units"]):
-                            avg_water_marginal_cost[i] += hgu["water_marginal_cost"]
-
-                    # Calculating the average of the scenarios
-                    average = average / self.data["scenarios"]
-                    if n_hgu == 2:
-                        for row in range(self.data["discretizations"]):
-                            for col in range(self.data["discretizations"]):
-                                if (xaxis[row][col] == discretization[0]) and (
-                                    yaxis[row][col] == discretization[1]
-                                ):
-                                    cost[row][col] = average
-                    coef_b = average
-                    for i, hgu in enumerate(result["hydro_units"]):
-                        # ! Invert the coefficient because of the minimization problem inverts the signal
-                        avg_water_marginal_cost[i] = (
-                            -avg_water_marginal_cost[i] / self.data["scenarios"]
-                        )
-                        coef_b -= v_i[i] * avg_water_marginal_cost[i]
-
-                        cuts.append(
-                            {
-                                "stage": stage,
-                                "coef_b": coef_b,
-                                "coefs": avg_water_marginal_cost,
-                            }
-                        )
-                        operation.append(
-                            {
-                                "stage": stage,
-                                "name": self.data["hydro_units"][i]["name"],
-                                "storage_percentage": "{}%".format(
-                                    int(discretization[i])
-                                ),
-                                "initial_volume": v_i[i],
-                                "average_cost": round(average, 2),
-                                "hydro_units": result["hydro_units"],
-                            }
-                        )
-
-                if n_hgu == 2:
-                    costs.append(
-                        {
-                            "HGUs": [hgu["name"] for hgu in self.data["hydro_units"]],
-                            "stage": stage,
-                            "xaxis": xaxis,
-                            "yaxis": yaxis,
-                            "zaxis": cost,
-                        }
-                    )
-
-            self.cuts = cuts
-            operation_df = pd.DataFrame(operation)
-
-            if n_hgu == 1 and plot:
-                plot_future_cost_function(operation=operation_df)
-
-            elif n_hgu == 2 and plot:
-                costs_df = pd.DataFrame(costs)
-                plot_future_cost_3D_function(costs=costs_df)
-
-            return operation_df
+            return result
 
         elif solver == "ulp":
             if scenario == 0:
                 for scn in range(self.data["scenarios"]):
-                    result = ulp(
+                    result = solver_service.ulp(
                         system_data=self.data,
                         scenario=scn,
                         verbose=verbose,
                     )
 
                     if plot:
-                        plot_ulp(
-                            gu_operation=result["hydro_units"],
+                        plot_service.ulp(
+                            operation=result["hydro_units"],
                             yaxis_column="vf",
                             yaxis_title="HGU Volume (hm3)",
                             plot_title="HGU Stored Volume on Scenario {}".format(
                                 scn + 1
                             ),
                         )
-                        plot_ulp(
-                            gu_operation=result["thermal_units"],
+                        plot_service.ulp(
+                            operation=result["thermal_units"],
                             yaxis_column="gt",
                             yaxis_title="Power Generation (MWmed)",
                             plot_title="TGU Power Generation on Scenario {}".format(
@@ -298,21 +182,21 @@ class PowerSystem(PowerSystemInterface):
                             ),
                         )
             else:
-                result = ulp(
+                result = solver_service.ulp(
                     system_data=self.data,
                     scenario=scenario - 1,
                     verbose=verbose,
                 )
 
                 if plot:
-                    plot_ulp(
-                        gu_operation=result["hydro_units"],
+                    plot_service.ulp(
+                        operation=result["hydro_units"],
                         yaxis_column="vf",
                         yaxis_title="HGU Volume (hm3)",
                         plot_title="HGUs Stored Volume on Scenario {}".format(scenario),
                     )
-                    plot_ulp(
-                        gu_operation=result["thermal_units"],
+                    plot_service.ulp(
+                        operation=result["thermal_units"],
                         yaxis_column="gt",
                         yaxis_title="Power Generation (MWmed)",
                         plot_title="TGUs Power Generation on Scenario {}".format(

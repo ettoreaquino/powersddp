@@ -1,7 +1,5 @@
 [![PyPI version](https://badge.fury.io/py/powersddp.svg)](https://badge.fury.io/py/powersddp)
-
 [![Python versions](https://img.shields.io/pypi/pyversions/powersddp.svg)](https://pypi.python.org/pypi/powersddp)
-
 [![Downloads](https://pepy.tech/badge/powersddp)](https://pepy.tech/project/powersddp)
 
 
@@ -16,6 +14,14 @@ A special thank should be given to professor **André Marcato**. This project do
 > **Note 1** This project is being developed alongside the masters course: _Planejamento de Sistemas Elétricos_, as part of the masters program in Energy Systems at the [_Electrical Engineering Graduate Program_](https://www2.ufjf.br/ppee-en/) from the  _Universidade Federal de Juiz de Fora - Brazil_
 
 > **Note 2** The code will evolve alongside the video lectures provided by professor Marcato at: [Curso de Planejamento de Sistemas Elétricos](https://www.youtube.com/watch?v=a4D_mouXoUw&list=PLz7tpQ4EY_ne0gfWIqw6pJFrCglT6fjq7)
+
+**Note 3: Algorithms to be implemented**:
+
+- *SDP-adapted: Stochastic Dynamic Programming (adapted)
+- *ULP: Unique Linear Programming
+- PDD: Prog. Dinamica Deterministica
+- PDDD: Prog. Dual Dinamica Deterministica
+- PDDE: Prog. Dual Dinamica Estocastica  
 
 ## Installation
 

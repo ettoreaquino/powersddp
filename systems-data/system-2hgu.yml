@@ -4,4 +4,4 @@ stages: 3
 scenarios: 2
 outage_cost: 500
 hydro_units: !include system-2hgu-hydro.yml
-thermal_units: !include system-thermal.yml
+thermal_units: !include system-2hgu-thermal.yml
