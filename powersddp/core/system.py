@@ -33,7 +33,7 @@ thermal_units: !include system-thermal.yml
 from abc import ABC, abstractmethod
 import yaml
 
-from powersddp.service.system.api import (plot_service, result_service, solver_service)
+from powersddp.service.system.api import plot_service, solver_service
 
 from powersddp.util._yml import YmlLoader
 
@@ -145,12 +145,13 @@ class PowerSystem(PowerSystemInterface):
         """
 
         if solver == "sdp":
-            operation_df = solver_service.sdp(system_data=self.data,
-                                              verbose=verbose)
+            result = solver_service.sdp(system_data=self.data, verbose=verbose)
 
-            if len(self.data['hydro_units']) == 1 and plot:
-                plot_service.sdp(operation=operation_df)
-                   
+            if len(self.data["hydro_units"]) == 1 and plot:
+                plot_service.sdp(operation=result["operation_df"])
+
+            return result
+
         elif solver == "ulp":
             if scenario == 0:
                 for scn in range(self.data["scenarios"]):

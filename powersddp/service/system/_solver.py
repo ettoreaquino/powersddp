@@ -10,17 +10,19 @@ import pandas as pd
 from cvxopt import solvers
 from itertools import product
 
-import powersddp.service.system._result as result_service
+import powersddp.service.system._verbose as verbose_service
 
 solvers.options["glpk"] = dict(msg_lev="GLP_MSG_OFF")
 
 # General Linear Programming
-def _glp(system_data: dict,
-         initial_volume: list,
-         inflow: list,
-         cuts: list,
-         stage: int,
-         verbose: bool = False):
+def _glp(
+    system_data: dict,
+    initial_volume: list,
+    inflow: list,
+    cuts: list,
+    stage: int,
+    verbose: bool = False,
+):
 
     n_hgu = len(system_data["hydro_units"])
     n_tgu = len(system_data["thermal_units"])
@@ -91,7 +93,7 @@ def _glp(system_data: dict,
     opt_problem.solve(format="dense", solver="glpk")
 
     if verbose:
-        result_service.spd_result(
+        verbose_service.spd_result(
             total_cost=round(objective_function.value()[0], 2),  # type: ignore
             future_cost=round(alpha[0].value()[0], 2),
             hydro_units=system_data["hydro_units"],
@@ -107,7 +109,7 @@ def _glp(system_data: dict,
     return {
         "total_cost": round(float(objective_function.value()[0]), 2),  # type: ignore
         "future_cost": round(float(alpha[0].value()[0]), 2),
-        "operational_marginal_cost": round(
+        "operational_marginal_cost": -round(
             float(constraints[n_hgu].multiplier.value[0]), 2
         ),
         "shortage": round(float(shortage[0].value()[0]), 2),
@@ -121,7 +123,7 @@ def _glp(system_data: dict,
                     "vf": round(float(v_f[i].value()[0]), 2),
                     "vt": round(float(v_t[i].value()[0]), 2),
                     "vv": round(float(v_v[i].value()[0]), 2),
-                    "wmc": -round(float(constraints[i].multiplier.value[0]), 2),
+                    "wmc": round(float(constraints[i].multiplier.value[0]), 2),
                 }
                 for i in range(n_hgu)
             ]
@@ -139,10 +141,8 @@ def _glp(system_data: dict,
     }
 
 
-
 # Stochastic Dual Programming
-def sdp(system_data: dict,
-        verbose: bool = False):
+def sdp(system_data: dict, verbose: bool = False):
     """Stochastic Dual Programming Solver
 
     Method to abstract the Dual Stochastic Programming solver applied to the power system
@@ -172,30 +172,32 @@ def sdp(system_data: dict,
     n_hgu = len(system_data["hydro_units"])
 
     step = 100 / (system_data["discretizations"] - 1)
-    discretizations = list(
-        product(np.arange(0, 100 + step, step), repeat=n_hgu)
-    )
+    discretizations = list(product(np.arange(0, 100 + step, step), repeat=n_hgu))
 
     operation = []
-    complete_result = []
     cuts = []  # type: ignore
     for stage in range(system_data["stages"], 0, -1):
         for discretization in discretizations:
 
-            v_i = [hgu["v_min"] + (hgu["v_max"] - hgu["v_min"]) * discretization[i] / 100 for i, hgu in enumerate(system_data["hydro_units"])]
+            # Initial Volume
+            v_i = [
+                hgu["v_min"] + (hgu["v_max"] - hgu["v_min"]) * discretization[i] / 100
+                for i, hgu in enumerate(system_data["hydro_units"])
+            ]
 
             # For Every Scenario
-            average = 0.0
-            avg_water_marginal_cost = [0 for _ in system_data["hydro_units"]]
             for scenario in range(system_data["scenarios"]):
-                inflow = [hgu["inflow_scenarios"][stage - 1][scenario] for hgu in system_data["hydro_units"]]
+                inflow = [
+                    hgu["inflow_scenarios"][stage - 1][scenario]
+                    for hgu in system_data["hydro_units"]
+                ]
 
                 if verbose:
-                    result_service.iteration(
+                    verbose_service.iteration(
                         stage=stage,
-                        discretization=int(discretization[0]),
                         scenario=scenario,
                     )
+
                 result = _glp(
                     system_data=system_data,
                     initial_volume=v_i,
@@ -205,67 +207,45 @@ def sdp(system_data: dict,
                     verbose=verbose,
                 )
 
-                result['stage'] = stage   
-                result['scenario'] = scenario + 1
-                result['hydro_units']['scenario'] = scenario + 1
-                result['thermal_units']['scenario'] = scenario + 1
-                complete_result.append(result)
+                result["stage"] = stage
+                result["discretization"] = discretization[0] if len(discretization) == 1 else discretization
+                result["initial_volume"] = v_i[0] if len(v_i) == 1 else v_i
+                result["scenario"] = scenario + 1
+                result["hydro_units"]["scenario"] = scenario + 1
+                result["hydro_units"]["discretization"] = discretization[0] if len(discretization) == 1 else discretization
+                result["thermal_units"]["scenario"] = scenario + 1
+                operation.append(result)
 
-                # average += result["total_cost"]
+            # Adding coef to cuts
+            df = pd.DataFrame(operation)
+            result_hydro = pd.concat([df for df in df["hydro_units"]])
+            result_avg = result_hydro.groupby(["name", "stage"]).mean()
+            result_avg["coef_b"] = result_avg["vi"] * result_avg["wmc"]
 
-                # Average Marginal Cost / HGU
-                # for i, hgu in enumerate(result["hydro_units"]):
-                #     avg_water_marginal_cost[i] += hgu["water_marginal_cost"]
+            cuts.append(
+                {
+                    "stage": stage,
+                    "coef_b": result_avg["coef_b"].sum(),
+                    "coefs": result_avg["wmc"].tolist(),
+                }
+            )
 
-            # Calculating the average of the scenarios
-            # average = average / system_data["scenarios"]
-            df = pd.DataFrame(complete_result)
-            result_overall = df.drop(['hydro_units', 'thermal_units'], axis=1)
-            
-            result_hydro = pd.concat([df for df in df['hydro_units']])
-            result_thermal = pd.concat([df for df in df['thermal_units']])
-            
-            result_avg = result_hydro.groupby(['name', 'stage']).mean()
-            result_avg['coef_b'] = - result_avg['vi'] * result_avg['wmc']
-
-            cuts.append({"stage": stage,
-                        "coef_b": result_avg['coef_b'].sum(),
-                        "coefs": result_avg['wmc'].tolist()})
-
-            operation.append()
-            
-            coef_b = average
-            for i, hgu in enumerate(result["hydro_units"]):
-                # ! Invert the coefficient because of the minimization problem inverts the signal
-                avg_water_marginal_cost[i] = (
-                    avg_water_marginal_cost[i] / system_data["scenarios"]
-                )
-
-                coef_b -= v_i[i] * avg_water_marginal_cost[i]
-
-                cuts.append(
-                    {
-                        "stage": stage,
-                        "coef_b": coef_b,
-                        "coefs": avg_water_marginal_cost,
-                    }
-                )
-                operation.append(
-                    {
-                        "stage": stage,
-                        "name": system_data["hydro_units"][i]["name"],
-                        "initial_volume": v_i[i],
-                        "avg_water_marginal_cost": avg_water_marginal_cost[i],
-                        "average_cost": round(average, 2),
-                    }
-                )
-
-    return pd.DataFrame(operation)
+    result_columns = [
+        "stage",
+        "scenario",
+        "discretization",
+        "initial_volume",
+        "total_cost",
+        "future_cost",
+        "operational_marginal_cost",
+        "shortage",
+        "hydro_units",
+        "thermal_units",
+    ]
+    return {"operation_df": pd.DataFrame(operation, columns=result_columns), "cuts": cuts}
 
 
-def ulp(system_data: dict,
-        scenario: int = 0,
-        verbose: bool = False):
+def ulp(system_data: dict, scenario: int = 0, verbose: bool = False):
     """Unique Linear Programming Solver
 
     Parameters
@@ -373,7 +353,7 @@ def ulp(system_data: dict,
 
     ## Print
     if verbose:
-        result_service.ulp_result(
+        verbose_service.ulp_result(
             stages=system_data["stages"],
             scenario=scenario + 1,
             total_cost=round(objective_function.value()[0], 2),  # type: ignore
@@ -394,10 +374,10 @@ def ulp(system_data: dict,
                 {
                     "stage": stage + 1,
                     "name": system_data["hydro_units"][i]["name"],
-                    "vf": round(float(v_f[i][stage].value()[0]),2),
-                    "vt": round(float(v_t[i][stage].value()[0]),2),
-                    "vv": round(float(v_v[i][stage].value()[0]),2),
-                    "wmc": round(float(constraints[i].multiplier.value[0]),2),
+                    "vf": round(float(v_f[i][stage].value()[0]), 2),
+                    "vt": round(float(v_t[i][stage].value()[0]), 2),
+                    "vv": round(float(v_v[i][stage].value()[0]), 2),
+                    "wmc": round(float(constraints[i].multiplier.value[0]), 2),
                 }
             )
         for i in range(n_tgu):
@@ -405,14 +385,16 @@ def ulp(system_data: dict,
                 {
                     "stage": stage + 1,
                     "name": system_data["thermal_units"][i]["name"],
-                    "gt": round(float(g_t[i][stage].value()[0]),2),
+                    "gt": round(float(g_t[i][stage].value()[0]), 2),
                 }
             )
 
     return {
-        "total_cost": round(float(objective_function.value()[0]),2),  # type: ignore
-        "operational_marginal_cost": round(float(constraints[n_hgu].multiplier.value[0]),2),
-        "shortage": round(float(shortage[0].value()[0]),2),
+        "total_cost": round(float(objective_function.value()[0]), 2),  # type: ignore
+        "operational_marginal_cost": round(
+            float(constraints[n_hgu].multiplier.value[0]), 2
+        ),
+        "shortage": round(float(shortage[0].value()[0]), 2),
         "hydro_units": pd.DataFrame(hgu_results),
         "thermal_units": pd.DataFrame(tgu_results),
     }

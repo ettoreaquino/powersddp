@@ -76,12 +76,19 @@ class TestSystem(TestCase):
             System = PowerSystem(data=payload)
 
             # Dispatching
-            operation = System.dispatch(solver="sdp")
+            result = System.dispatch(solver="sdp")
+            operation = result['operation_df']
+
+            # Calculating Mean results
+            df = operation.drop(columns=["hydro_units", "thermal_units"], axis=1)
+            df_mean = df.groupby(["stage", "initial_volume"]).mean().reset_index().sort_values(by=['stage', 'initial_volume'], ascending=[False, True])
+
             # Assert Structure
+            self.assertEqual(type(result), dict)
             self.assertEqual(type(operation), pd.DataFrame)
 
             # Assert Values
-            self.assertEqual(operation.iloc[0].average_cost, 6725.0)
+            self.assertEqual(df_mean.total_cost.to_list(), [6725.0, 7.75, 0.0, 5062.5, 0.0, 0.0, 3637.5, 0.0, 0.0])
 
     def test_PowerSystem_should_dispatch_ulp(self):
         with self.subTest():
@@ -112,6 +119,7 @@ class TestSystem(TestCase):
 
             # Dispatching
             operation = System.dispatch(solver="ulp", scenario=1)
+            
 
             # Assert Structure
             self.assertEqual(type(operation), dict)
@@ -119,7 +127,7 @@ class TestSystem(TestCase):
             self.assertEqual(type(operation["thermal_units"]), pd.DataFrame)
 
             # Assert Values
-            self.assertEqual(operation["total_cost"], 198.49999999999972)
+            self.assertEqual(operation["total_cost"], 198.5)
 
     def test_PowerSystem_should_dispatch_two_hgus_using_ulp(self):
         with self.subTest():
@@ -135,4 +143,4 @@ class TestSystem(TestCase):
             self.assertTrue(System.data["load"] == [150, 150, 150])
 
             # Results
-            self.assertEqual(operation["total_cost"], 7175.000000000012)
+            self.assertEqual(operation["total_cost"], 7175.0)

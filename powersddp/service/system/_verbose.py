@@ -1,11 +1,9 @@
 from typing import Any
 
 
-def iteration(stage: int, discretization: int, scenario: int):
+def iteration(stage: int, scenario: int):
     print("===================================")
-    print(
-        "STAGE: {} | DISC.: {}% | SCENARIO: {}".format(stage, discretization, scenario)
-    )
+    print("STAGE: {} | SCENARIO: {}".format(stage, scenario))
 
 
 def _add_row(name: str, title: str, value: float):
