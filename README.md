@@ -15,6 +15,14 @@ A special thank should be given to professor **André Marcato**. This project do
 
 > **Note 2** The code will evolve alongside the video lectures provided by professor Marcato at: [Curso de Planejamento de Sistemas Elétricos](https://www.youtube.com/watch?v=a4D_mouXoUw&list=PLz7tpQ4EY_ne0gfWIqw6pJFrCglT6fjq7)
 
+**Note 3: Algorithms to be implemented**:
+
+- *SDP-adapted: Stochastic Dynamic Programming (adapted)
+- *ULP: Unique Linear Programming
+- PDD: Prog. Dinamica Deterministica
+- PDDD: Prog. Dual Dinamica Deterministica
+- PDDE: Prog. Dual Dinamica Estocastica  
+
 ## Installation
 
 ```

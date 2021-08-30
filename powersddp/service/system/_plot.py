@@ -1,5 +1,6 @@
-import plotly.graph_objects as go
+import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 
 from plotly.subplots import make_subplots
 
@@ -81,7 +82,29 @@ def ulp(operation: pd.DataFrame, yaxis_column: str, yaxis_title: str, plot_title
 
 
 def sdp_2hgu(operation: pd.DataFrame):
+    # Adjust dataset for surface plot
+    hgus = operation.iloc[0]['hydro_units']['name'].unique().tolist()
+    df = operation.drop(["hydro_units","thermal_units", "initial_volume"], axis=1)
+    mean_df = df.groupby(['stage', 'discretization']).mean().reset_index()
+    mean_df = mean_df.drop(['scenario', 'future_cost', 'operational_marginal_cost', 'shortage'], axis=1).sort_values(by=['stage', 'discretization'], ascending=[False, True]).reset_index(drop=True)
 
+    # Get stages and discretizations
+    stages = mean_df['stage'].unique()
+    discretizations = mean_df['discretization'].unique()
+
+    # Creating axis meshgrids
+    step = 100/(len(list(set([disc[0] for disc in discretizations]))) - 1)
+    xaxis, yaxis = np.meshgrid(np.arange(0, 100 + step, step), np.arange(0, 100 + step, step))
+
+    # Building costs mesh grids
+    costs = []
+    for i, stage in enumerate(stages):
+        stage_df = mean_df.loc[mean_df["stage"] == stage]
+        zaxis = np.array(stage_df["total_cost"].to_list()).reshape(3,3).T
+        costs.append({"hgus": hgus, "stage": stage, "xaxis": xaxis, "yaxis":yaxis, "zaxis": zaxis})
+
+    costs = pd.DataFrame(costs)
+    # Plotting
     n_stages = costs["stage"].unique().size
 
     fig = make_subplots(
@@ -107,18 +130,18 @@ def sdp_2hgu(operation: pd.DataFrame):
 
     fig.update_layout(
         scene=dict(
-            xaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][0]),
-            yaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][1]),
+            xaxis_title="{} Initial Volume [hm3]".format(costs["hgus"][0][0]),
+            yaxis_title="{} Initial Volume [hm3]".format(costs["hgus"][0][1]),
             zaxis_title="$/MW",
         ),
         scene2=dict(
-            xaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][0]),
-            yaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][1]),
+            xaxis_title="{} Initial Volume [hm3]".format(costs["hgus"][0][0]),
+            yaxis_title="{} Initial Volume [hm3]".format(costs["hgus"][0][1]),
             zaxis_title="$/MW",
         ),
         scene3=dict(
-            xaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][0]),
-            yaxis_title="{} Initial Volume [hm3]".format(costs["HGUs"][0][1]),
+            xaxis_title="{} Initial Volume [hm3]".format(costs["hgus"][0][0]),
+            yaxis_title="{} Initial Volume [hm3]".format(costs["hgus"][0][1]),
             zaxis_title="$/MW",
         ),
         height=900 * n_stages,

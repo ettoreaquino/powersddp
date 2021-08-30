@@ -81,7 +81,7 @@ def _glp(
 
     ### Cut constraint (Future cost function of forward stage)
     for cut in cuts:
-        if cut["stage"] == stage - 1:
+        if cut["stage"] == stage + 1:
             equation = 0
             for hgu in range(n_hgu):
                 equation += float(cut["coefs"][hgu]) * v_f[hgu]
