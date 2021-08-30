@@ -150,6 +150,9 @@ class PowerSystem(PowerSystemInterface):
             if len(self.data["hydro_units"]) == 1 and plot:
                 plot_service.sdp(operation=result["operation_df"])
 
+            elif len(self.data["hydro_units"]) == 2 and plot:
+                plot_service.sdp_2hgu(operation=result["operation_df"])
+
             return result
 
         elif solver == "ulp":
