@@ -77,18 +77,36 @@ class TestSystem(TestCase):
 
             # Dispatching
             result = System.dispatch(solver="sdp")
-            operation = result['operation_df']
+            operation = result["operation_df"]
 
             # Calculating Mean results
             df = operation.drop(columns=["hydro_units", "thermal_units"], axis=1)
-            df_mean = df.groupby(["stage", "initial_volume"]).mean().reset_index().sort_values(by=['stage', 'initial_volume'], ascending=[False, True])
+            df_mean = (
+                df.groupby(["stage", "initial_volume"])
+                .mean()
+                .reset_index()
+                .sort_values(by=["stage", "initial_volume"], ascending=[False, True])
+            )
 
             # Assert Structure
             self.assertEqual(type(result), dict)
             self.assertEqual(type(operation), pd.DataFrame)
 
             # Assert Values
-            self.assertEqual(df_mean.total_cost.to_list(), [6725.0, 7.75, 0.0, 5062.5, 0.0, 0.0, 3637.5, 0.0, 0.0])
+            self.assertEqual(
+                df_mean.total_cost.to_list(),
+                [
+                    6725.0,
+                    7.75,
+                    0.0,
+                    24062.5,
+                    19000.035,
+                    19000.434999999998,
+                    32232.5,
+                    28595.065,
+                    28595.465,
+                ],
+            )
 
     def test_PowerSystem_should_dispatch_ulp(self):
         with self.subTest():
@@ -119,7 +137,6 @@ class TestSystem(TestCase):
 
             # Dispatching
             operation = System.dispatch(solver="ulp", scenario=1)
-            
 
             # Assert Structure
             self.assertEqual(type(operation), dict)

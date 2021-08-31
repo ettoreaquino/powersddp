@@ -6,9 +6,14 @@ from plotly.subplots import make_subplots
 
 
 def sdp(operation: pd.DataFrame):
-    
+
     df = operation.drop(columns=["hydro_units", "thermal_units"], axis=1)
-    df_mean = df.groupby(["stage", "initial_volume"]).mean().reset_index().sort_values(by=['stage', 'initial_volume'], ascending=[False, True])
+    df_mean = (
+        df.groupby(["stage", "initial_volume"])
+        .mean()
+        .reset_index()
+        .sort_values(by=["stage", "initial_volume"], ascending=[False, True])
+    )
     n_stages = df["stage"].unique().size
 
     fig = make_subplots(rows=n_stages, cols=1)
@@ -17,36 +22,48 @@ def sdp(operation: pd.DataFrame):
         stage_df = df.loc[df["stage"] == stage]
         stage_mean = df_mean.loc[df_mean["stage"] == stage]
 
-        fig.add_trace(go.Scatter(x=stage_mean["initial_volume"],
-                                 y=stage_mean["total_cost"],
-                                 mode="lines",
-                                 name="Stage {}".format(stage)),
-                      row=i + 1,
-                      col=1)
-        for j, scenario in enumerate(stage_df["scenario"].unique()[::-1]): 
+        fig.add_trace(
+            go.Scatter(
+                x=stage_mean["initial_volume"],
+                y=stage_mean["total_cost"],
+                mode="lines",
+                name="Stage {}".format(stage),
+            ),
+            row=i + 1,
+            col=1,
+        )
+        for j, scenario in enumerate(stage_df["scenario"].unique()[::-1]):
             scenario_df = stage_df.loc[stage_df["scenario"] == scenario]
             if j == len(df["scenario"].unique()) - 1:
-                fig.add_trace(go.Scatter(x=scenario_df["initial_volume"],
-                                         y=scenario_df["total_cost"],
-                                         mode="lines",
-                                         line=dict(width=0),
-                                         marker=dict(color="#444"),
-                                         name="Scenario {}".format(scenario),
-                                         fillcolor='rgba(163, 172, 247, 0.3)',
-                                         fill='tonexty',
-                                         showlegend=False),
-                              row=i + 1,
-                              col=1)
+                fig.add_trace(
+                    go.Scatter(
+                        x=scenario_df["initial_volume"],
+                        y=scenario_df["total_cost"],
+                        mode="lines",
+                        line=dict(width=0),
+                        marker=dict(color="#444"),
+                        name="Scenario {}".format(scenario),
+                        fillcolor="rgba(163, 172, 247, 0.3)",
+                        fill="tonexty",
+                        showlegend=False,
+                    ),
+                    row=i + 1,
+                    col=1,
+                )
             else:
-                fig.add_trace(go.Scatter(x=scenario_df["initial_volume"],
-                                         y=scenario_df["total_cost"],
-                                         mode="lines",
-                                         line=dict(width=0),
-                                         marker=dict(color="#444"),
-                                         name="Scenario {}".format(scenario),
-                                         showlegend=False),
-                              row=i + 1,
-                              col=1)
+                fig.add_trace(
+                    go.Scatter(
+                        x=scenario_df["initial_volume"],
+                        y=scenario_df["total_cost"],
+                        mode="lines",
+                        line=dict(width=0),
+                        marker=dict(color="#444"),
+                        name="Scenario {}".format(scenario),
+                        showlegend=False,
+                    ),
+                    row=i + 1,
+                    col=1,
+                )
 
     fig.update_xaxes(title_text="Final Volume [hm3]")
     fig.update_yaxes(title_text="$/MW")
@@ -83,25 +100,41 @@ def ulp(operation: pd.DataFrame, yaxis_column: str, yaxis_title: str, plot_title
 
 def sdp_2hgu(operation: pd.DataFrame):
     # Adjust dataset for surface plot
-    hgus = operation.iloc[0]['hydro_units']['name'].unique().tolist()
-    df = operation.drop(["hydro_units","thermal_units", "initial_volume"], axis=1)
-    mean_df = df.groupby(['stage', 'discretization']).mean().reset_index()
-    mean_df = mean_df.drop(['scenario', 'future_cost', 'operational_marginal_cost', 'shortage'], axis=1).sort_values(by=['stage', 'discretization'], ascending=[False, True]).reset_index(drop=True)
+    hgus = operation.iloc[0]["hydro_units"]["name"].unique().tolist()
+    df = operation.drop(["hydro_units", "thermal_units", "initial_volume"], axis=1)
+    mean_df = df.groupby(["stage", "discretization"]).mean().reset_index()
+    mean_df = (
+        mean_df.drop(
+            ["scenario", "future_cost", "operational_marginal_cost", "shortage"], axis=1
+        )
+        .sort_values(by=["stage", "discretization"], ascending=[False, True])
+        .reset_index(drop=True)
+    )
 
     # Get stages and discretizations
-    stages = mean_df['stage'].unique()
-    discretizations = mean_df['discretization'].unique()
+    stages = mean_df["stage"].unique()
+    discretizations = mean_df["discretization"].unique()
 
     # Creating axis meshgrids
-    step = 100/(len(list(set([disc[0] for disc in discretizations]))) - 1)
-    xaxis, yaxis = np.meshgrid(np.arange(0, 100 + step, step), np.arange(0, 100 + step, step))
+    step = 100 / (len(list(set([disc[0] for disc in discretizations]))) - 1)
+    xaxis, yaxis = np.meshgrid(
+        np.arange(0, 100 + step, step), np.arange(0, 100 + step, step)
+    )
 
     # Building costs mesh grids
     costs = []
     for i, stage in enumerate(stages):
         stage_df = mean_df.loc[mean_df["stage"] == stage]
-        zaxis = np.array(stage_df["total_cost"].to_list()).reshape(3,3).T
-        costs.append({"hgus": hgus, "stage": stage, "xaxis": xaxis, "yaxis":yaxis, "zaxis": zaxis})
+        zaxis = np.array(stage_df["total_cost"].to_list()).reshape(3, 3).T
+        costs.append(
+            {
+                "hgus": hgus,
+                "stage": stage,
+                "xaxis": xaxis,
+                "yaxis": yaxis,
+                "zaxis": zaxis,
+            }
+        )
 
     costs = pd.DataFrame(costs)
     # Plotting

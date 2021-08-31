@@ -208,11 +208,15 @@ def sdp(system_data: dict, verbose: bool = False):
                 )
 
                 result["stage"] = stage
-                result["discretization"] = discretization[0] if len(discretization) == 1 else discretization
+                result["discretization"] = (
+                    discretization[0] if len(discretization) == 1 else discretization
+                )
                 result["initial_volume"] = v_i[0] if len(v_i) == 1 else v_i
                 result["scenario"] = scenario + 1
                 result["hydro_units"]["scenario"] = scenario + 1
-                result["hydro_units"]["discretization"] = discretization[0] if len(discretization) == 1 else discretization
+                result["hydro_units"]["discretization"] = (
+                    discretization[0] if len(discretization) == 1 else discretization
+                )
                 result["thermal_units"]["scenario"] = scenario + 1
                 operation.append(result)
 
@@ -242,7 +246,10 @@ def sdp(system_data: dict, verbose: bool = False):
         "hydro_units",
         "thermal_units",
     ]
-    return {"operation_df": pd.DataFrame(operation, columns=result_columns), "cuts": cuts}
+    return {
+        "operation_df": pd.DataFrame(operation, columns=result_columns),
+        "cuts": cuts,
+    }
 
 
 def ulp(system_data: dict, scenario: int = 0, verbose: bool = False):
