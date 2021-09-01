@@ -143,7 +143,7 @@ def sdp_2hgu(operation: pd.DataFrame):
     costs = pd.DataFrame(costs)
 
     # Plotting
-    n_stages = costs["stage"].unique().size
+    n_stages = costs["stage"].unique().size # type: ignore
 
     fig = make_subplots(
         rows=n_stages,
@@ -152,8 +152,8 @@ def sdp_2hgu(operation: pd.DataFrame):
         subplot_titles=["Stage {}".format(stage + 1) for stage in range(n_stages)],
     )
 
-    for i, stage in enumerate(costs["stage"].unique()):
-        stage_df = costs.loc[costs["stage"] == stage]
+    for i, stage in enumerate(costs["stage"].unique()): # type: ignore
+        stage_df = costs.loc[costs["stage"] == stage] # type: ignore
         fig.add_trace(
             go.Surface(
                 x=xaxis,
