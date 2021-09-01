@@ -186,7 +186,7 @@ data = {'load': [50, 50, 50],
                           {'name': 'GT2', 'capacity': 10, 'cost': 25}]}
 
 PowerSystem = psddp.PowerSystem(data=data)
-operation = PowerSystem.dispatch(solver='ulp', scenario=1, verbose=False, plot=True)
+operation = PowerSystem.dispatch(solver='sdp', scenario=0, verbose=False, plot=True)
 
 ```
 
