@@ -136,15 +136,17 @@ class TestSystem(TestCase):
             System = PowerSystem(data=payload)
 
             # Dispatching
-            operation = System.dispatch(solver="ulp", scenario=1)
+            optimistic_operation = System.dispatch(solver="ulp", scenario=1)
+            pessimistic_operation = System.dispatch(solver="ulp", scenario=2)
 
             # Assert Structure
-            self.assertEqual(type(operation), dict)
-            self.assertEqual(type(operation["hydro_units"]), pd.DataFrame)
-            self.assertEqual(type(operation["thermal_units"]), pd.DataFrame)
+            self.assertEqual(type(optimistic_operation), dict)
+            self.assertEqual(type(optimistic_operation["hydro_units"]), pd.DataFrame)
+            self.assertEqual(type(optimistic_operation["thermal_units"]), pd.DataFrame)
 
             # Assert Values
-            self.assertEqual(operation["total_cost"], 198.5)
+            self.assertEqual(optimistic_operation["total_cost"], 198.5)
+            self.assertEqual(pessimistic_operation["total_cost"], 350.5)
 
     def test_PowerSystem_should_dispatch_two_hgus_using_ulp(self):
         with self.subTest():
