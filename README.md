@@ -9,19 +9,22 @@ The main goal of this library is to provide support for studies regarding the op
 
 > **Note 1** This is an under development library.
 
+<u>**Algorithms (to be) implemented:**</u>
+
+- [x] SDP: Stochastic Dynamic Programming - Adapted Modeling
+- [x] ULP: Unique Linear Programming
+- [ ] D2P: Deterministic Dynamic Programming
+- [ ] D3P: Deterministic Dynamic Dual Programming
+- [ ] D2SP: Dual Dynamic Stochastic Programming  
+
+
 A special thank should be given to professor **André Marcato**. This project does not intend to substitute the similar library `PySDDP`.
 
 > **Note 1** This project is being developed alongside the masters course: _Planejamento de Sistemas Elétricos_, as part of the masters program in Energy Systems at the [_Electrical Engineering Graduate Program_](https://www2.ufjf.br/ppee-en/) from the  _Universidade Federal de Juiz de Fora - Brazil_
 
 > **Note 2** The code will evolve alongside the video lectures provided by professor Marcato at: [Curso de Planejamento de Sistemas Elétricos](https://www.youtube.com/watch?v=a4D_mouXoUw&list=PLz7tpQ4EY_ne0gfWIqw6pJFrCglT6fjq7)
 
-**Note 3: Algorithms to be implemented**:
 
-- *SDP-adapted: Stochastic Dynamic Programming (adapted)
-- *ULP: Unique Linear Programming
-- PDD: Prog. Dinamica Deterministica
-- PDDD: Prog. Dual Dinamica Deterministica
-- PDDE: Prog. Dual Dinamica Estocastica  
 
 ## Installation
 
@@ -30,13 +33,24 @@ pip install powersddp
 ```
 
 ## Example
+Below, it is depicted how to `initialize` a Hydrothermal Power System parameters, and the `dispatch` options (so far developed).
 
-There are two ways of initializing a `Power System`. Either by providing a `.yml` file, or by passing a dictionary as an initialization data. Both are depicted bellow:
+<!--- There are two ways of initializing a `Power System`. Either by providing a `.yml` file, or by passing a dictionary as an initialization data. Both are depicted bellow:-->
 
-> **Note:** When using the file input method (`.yml` format) check the  [example](system.yml) of how to declare the parameters.
+<!--- > **Note:** When using the file input method (`.yml` format) check the  [example](system.yml) of how to declare the parameters. --->
 
 
-### Initializing a `PowerSystem`
+### I. Initializing a `PowerSystem`
+
+**PowerSystem()** accepts the following arguments:
+
+- `path : str, optional` 
+  - Path to the systems.yml file
+  
+- `data : dict, optional`
+  - Dictionary containing all of the power system parameters, including the generation units.
+
+#### A. <u>Initializing via `.yml` file:</u>
 ```Python
 import powersddp as psddp
 
@@ -48,7 +62,63 @@ print("System Load: {}\n"
                                   len(system.data['hydro_units']),
                                   len(system.data['thermal_units'])))
 ```
+where `system.yml` provide the system parameters:
+```Yml
+load: [50,50,50]
+discretizations: 3
+stages: 3
+scenarios: 2
+outage_cost: 500
+hydro_units: !include system-hydro.yml
+thermal_units: !include system-thermal.yml
+```
+and `system-hydro.yml`, `system-thermal.yml` provide the Hydro and Thermal Units parameters, respectively.
 
+<table class="center">
+  <tr>
+    <th> system-hydro.yml </th>
+    <th> system-thermal.yml </th>
+  </tr>
+  <tr>
+  <td>
+  
+  ```Yml
+  -
+    name: HU1
+    v_max: 100
+    v_min: 20
+    v_ini: 100
+    prod: 0.95
+    flow_max: 60
+    inflow_scenarios:
+      - [23,16]
+      - [19,14]
+      - [15,11]
+  -
+    etc...
+  ```
+  
+  </td>
+  <td>
+  
+  ```Yml
+  -
+    name: GT1
+    capacity: 15
+    cost: 10
+  -
+    name: GT2
+    capacity: 10
+    cost: 25
+  -
+    etc...
+  ```
+  </td>
+  </tr>
+</table>
+
+
+#### B. <u>Initializing via Python dictionary structure:</u>
 ```Python
 import powersddp as psddp
 
@@ -76,22 +146,51 @@ print("System Load: {}\n"
                                   len(PowerSystem.data['thermal_units'])))
 ```
 
-### Dispatching a `PowerSystem`
+### II. Dispatching a `PowerSystem`
 
 #### **dispatch()** accepts the following arguments:
 
 - `solver : str, optional defaults to 'sdp'`
-  - Selects the solver option for the minimization objective function.
+  - Selects the **solver option** for the minimization objective function.
+    - Developed solvers: **sdp** and **ulp**.
 
 - `scenario : int, optional defaults to 0`
-  - Chooses either a specific scenario to investigate (`scenario>1`) or all scenarios to evaluate (`scenario= 0`). Starting from 0 to the number of declared scenarios in the `hydro_units['inflow_scenarios']` parameter.
+  - Chooses either a **specific scenario** (`scenario>1`) or **all scenarios** to evaluate (`scenario=0`). Starting from 0 to the number of declared scenarios in the `hydro_units['inflow_scenarios']` parameter.
 
 - `verbose : bool, optional defaults to False`
-  - Displays the PDDE solution for every stage of the execution. Use with care, solutions of complex systems with too many stages and scenarios might overflow the console.
+  - Displays the solver solution for every stage of the execution. **<u>Use with care</u>**, solutions of complex systems with too many stages and scenarios might overflow the console.
 
 - `plot : bool, optional, defaults to False`
-  - Displays a sequence of plots showing the future cost function for every stage of the execution. 
+  - Displays a sequence of plots showing the **future cost function**, **Hydro-Units reservoir volume**, and **Hydrothermal units power generated** for every stage of the execution.
 
+
+#### A. <u>Stochastic Deterministic Programming solver (`sdp`):</u>
+The following example executes the Power System dispatch using the Stochastic Deterministic Programming method for all scenarios (id = 0) and outputs the plots.
+
+```Python
+import powersddp as psddp
+
+data = {'load': [50, 50, 50],
+        'discretizations': 3,
+        'stages': 3,
+        'scenarios': 2,
+        'outage_cost': 500,
+        'hydro_units': [{'name': 'HU1',
+                         'v_max': 100,
+                         'v_min': 20,
+                         'v_ini': 100,
+                         'prod': 0.95,
+                         'flow_max': 60,
+                         'inflow_scenarios': [[23, 16], [19, 14], [15, 11]]}],
+        'thermal_units': [{'name': 'GT1', 'capacity': 15, 'cost': 10},
+                          {'name': 'GT2', 'capacity': 10, 'cost': 25}]}
+
+PowerSystem = psddp.PowerSystem(data=data)
+operation = PowerSystem.dispatch(solver='ulp', scenario=1, verbose=False, plot=True)
+
+```
+
+#### B. <u>Unique Linear Programming solver (`ulp`):</u>
 The following example executes the Power System dispatch using the Unique Linear Programming method for the first scenario (id = 1) and outputs the optimization steps.
 
 ```Python
@@ -113,8 +212,7 @@ data = {'load': [50, 50, 50],
                           {'name': 'GT2', 'capacity': 10, 'cost': 25}]}
 
 PowerSystem = psddp.PowerSystem(data=data)
-operation = PowerSystem.dispatch(solver='ulp', scenario=1, verbose=True)
+operation = PowerSystem.dispatch(solver='ulp', scenario=1, verbose=True, plot=False)
 
-print(operation)
 ```
 <!-- <img src="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1"> -->

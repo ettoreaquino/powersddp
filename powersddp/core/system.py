@@ -73,10 +73,7 @@ class PowerSystem(PowerSystemInterface):
         ----------
         path : str, optional
             Path to the systems.yml file.
-        data : :obj:`dict`, optional
-            Description of `param2`. Multiple
-            lines are supported.
-        param3 : :obj:`int`, optional
+        data : dict, optional
             Dictionary containing all of the power system parameters, including the generation units.
 
         """
