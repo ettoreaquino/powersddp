@@ -197,7 +197,7 @@ def sdp(system_data: dict, verbose: bool = False):
                         stage=stage,
                         scenario=scenario,
                     )
-
+                print(stage, scenario, discretization, v_i, inflow, cuts)
                 result = _glp(
                     system_data=system_data,
                     initial_volume=v_i,
@@ -223,14 +223,20 @@ def sdp(system_data: dict, verbose: bool = False):
             # Adding coef to cuts
             df = pd.DataFrame(operation)
             result_hydro = pd.concat([df for df in df["hydro_units"]])
-            result_avg = result_hydro.groupby(["name", "stage"]).mean()
-            result_avg["coef_b"] = result_avg["vi"] * result_avg["wmc"]
+            hydro_avg = result_hydro.groupby(["name", "discretization"]).mean()
+            hydro_avg["coef_b"] = (hydro_avg["vi"] * hydro_avg["wmc"])
+            hydro_coefs = hydro_avg.reset_index()
+            total_cost = df.groupby("discretization").mean().reset_index()
+            total_cost["total_cost"] = total_cost["total_cost"] + hydro_coefs["coef_b"]
+
+            total_cost = hydro_avg["coef_b"] + df.groupby("discretization").mean()["total_cost"]
+            total_cost = total_cost.reset_index()
 
             cuts.append(
                 {
                     "stage": stage,
-                    "coef_b": result_avg["coef_b"].sum(),
-                    "coefs": result_avg["wmc"].tolist(),
+                    "coef_b": total_cost[total_cost["discretization"] == discretization]["total_cost"],
+                    "coefs": hydro_coefs[hydro_coefs["discretization"] == discretization]["wmc"].tolist(),
                 }
             )
 
