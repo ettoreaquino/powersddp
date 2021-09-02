@@ -49,7 +49,7 @@ class TestSystem(TestCase):
             self.assertTrue(System.data["load"] == [50, 50, 50])
             self.assertTrue(System.data["hydro_units"][0]["name"] == "HU1")
 
-    def test_PowerSystem_should_dispatch_sdp(self):
+    def test_PowerSystem_should_dispatch_sdp_and_get_correct_results(self):
         with self.subTest():
             payload = {
                 "load": [50, 50, 50],
@@ -86,6 +86,7 @@ class TestSystem(TestCase):
                 .mean()
                 .reset_index()
                 .sort_values(by=["stage", "initial_volume"], ascending=[False, True])
+                .round(3)
             )
 
             # Assert Structure
@@ -94,18 +95,8 @@ class TestSystem(TestCase):
 
             # Assert Values
             self.assertEqual(
-                df_mean.total_cost.to_list(),
-                [
-                    6725.0,
-                    7.75,
-                    0.0,
-                    24062.5,
-                    19000.035,
-                    19000.434999999998,
-                    32232.5,
-                    28595.065,
-                    28595.465,
-                ],
+                df_mean.total_cost.tolist(),
+                [6725.0, 7.75, 0.0, 11787.5, 226.93, 0.625, 15425.0, 576.31, 161.68],
             )
 
     def test_PowerSystem_should_dispatch_ulp(self):

@@ -84,7 +84,7 @@ def _glp(
         if cut["stage"] == stage + 1:
             equation = 0
             for hgu in range(n_hgu):
-                equation += float(cut["coefs"][hgu]) * v_f[hgu]
+                equation -= float(cut["coefs"][hgu]) * v_f[hgu]
             equation += float(cut["coef_b"])  # type: ignore
             constraints.append(alpha[0] >= equation)
 
@@ -197,7 +197,7 @@ def sdp(system_data: dict, verbose: bool = False):
                         stage=stage,
                         scenario=scenario,
                     )
-                print(stage, discretization, scenario, v_i, inflow, cuts)
+
                 result = _glp(
                     system_data=system_data,
                     initial_volume=v_i,
@@ -223,19 +223,29 @@ def sdp(system_data: dict, verbose: bool = False):
             # Adding coef to cuts
             df = pd.DataFrame(operation)
             df_hydro = pd.concat([df for df in df["hydro_units"]])
-            
+
             hydro_avg = df_hydro.groupby(["name", "discretization", "stage"]).mean()
             hydro_avg["coef_b"] = hydro_avg["vi"] * hydro_avg["wmc"]
             hydro_avg = hydro_avg.reset_index()
 
-            total_cost = df.groupby(["discretization","stage"]).mean().reset_index()
+            total_cost = df.groupby(["discretization", "stage"]).mean().reset_index()
             total_cost["total_cost"] = total_cost["total_cost"] + hydro_avg["coef_b"]
 
             cuts.append(
                 {
                     "stage": stage,
-                    "coef_b": total_cost.query("discretization == {} & stage == {}".format(discretization, stage)).iloc[0].total_cost,
-                    "coefs": hydro_avg.query("discretization == {} & stage == {}".format(discretization, stage))["wmc"].tolist(),
+                    "coef_b": total_cost.query(
+                        "discretization == {} & stage == {}".format(
+                            discretization, stage
+                        )
+                    )
+                    .iloc[0]
+                    .total_cost,
+                    "coefs": hydro_avg.query(
+                        "discretization == {} & stage == {}".format(
+                            discretization, stage
+                        )
+                    )["wmc"].tolist(),
                 }
             )
 
