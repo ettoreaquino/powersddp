@@ -80,6 +80,7 @@ def _glp(
     constraints.append(alpha[0] >= 0)
 
     ### Cut constraint (Future cost function of forward stage)
+    ## ERROR UNDER INVESTIGATION
     for cut in cuts:
         if cut["stage"] == stage + 1:
             equation = 0
@@ -197,7 +198,7 @@ def sdp(system_data: dict, verbose: bool = False):
                         stage=stage,
                         scenario=scenario,
                     )
-
+                print(stage, scenario, discretization, cuts)
                 result = _glp(
                     system_data=system_data,
                     initial_volume=v_i,
@@ -234,18 +235,20 @@ def sdp(system_data: dict, verbose: bool = False):
             cuts.append(
                 {
                     "stage": stage,
-                    "coef_b": total_cost.query(
-                        "discretization == {} & stage == {}".format(
-                            discretization, stage
+                    "coef_b": total_cost.loc[
+                        (
+                            (total_cost["stage"] == stage)
+                            & (total_cost["discretization"] == discretization)
                         )
-                    )
+                    ]
                     .iloc[0]
                     .total_cost,
-                    "coefs": hydro_avg.query(
-                        "discretization == {} & stage == {}".format(
-                            discretization, stage
+                    "coefs": hydro_avg.loc[
+                        (
+                            (hydro_avg["stage"] == stage)
+                            & (hydro_avg["discretization"] == discretization)
                         )
-                    )["wmc"].tolist(),
+                    ]["wmc"].tolist(),
                 }
             )
 
