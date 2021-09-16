@@ -187,7 +187,9 @@ def sdp(system_data: dict, verbose: bool = False):
             ]
 
             # For Every Scenario
-            for scenario in range(system_data["scenarios"]):
+            for i,scenario in enumerate(range(system_data["scenarios"])):
+                unique_id = "_".join([str(n) for n in discretization])
+
                 inflow = [
                     hgu["inflow_scenarios"][stage - 1][scenario]
                     for hgu in system_data["hydro_units"]
@@ -198,7 +200,6 @@ def sdp(system_data: dict, verbose: bool = False):
                         stage=stage,
                         scenario=scenario,
                     )
-                print(stage, scenario, discretization, cuts)
                 result = _glp(
                     system_data=system_data,
                     initial_volume=v_i,
@@ -215,6 +216,7 @@ def sdp(system_data: dict, verbose: bool = False):
                 result["initial_volume"] = v_i[0] if len(v_i) == 1 else v_i
                 result["scenario"] = scenario + 1
                 result["hydro_units"]["scenario"] = scenario + 1
+                result["hydro_units"]["id"] = unique_id
                 result["hydro_units"]["discretization"] = (
                     discretization[0] if len(discretization) == 1 else discretization
                 )
@@ -225,28 +227,28 @@ def sdp(system_data: dict, verbose: bool = False):
             df = pd.DataFrame(operation)
             df_hydro = pd.concat([df for df in df["hydro_units"]])
 
-            hydro_avg = df_hydro.groupby(["name", "discretization", "stage"]).mean()
+            hydro_avg = df_hydro.groupby(["name", "id", "stage"]).mean()
             hydro_avg["coef_b"] = hydro_avg["vi"] * hydro_avg["wmc"]
             hydro_avg = hydro_avg.reset_index()
 
-            total_cost = df.groupby(["discretization", "stage"]).mean().reset_index()
-            total_cost["total_cost"] = total_cost["total_cost"] + hydro_avg["coef_b"]
+            total_cost = df.groupby(["discretization", "stage"]).mean().reset_index().sort_values(by=['stage','discretization',], ascending=[False,True])
+
+            if n_hgu > 1:
+                summed_costs = hydro_avg.groupby(["id", "stage"]).sum()   
+
+                coef_b = total_cost["total_cost"].tail(1).values[0] + summed_costs.query("id == '{}' & stage == {}".format(unique_id, stage)).coef_b.values[0]
+            else:
+                coef_b = total_cost["total_cost"].tail(1) + hydro_avg["coef_b"]
+
 
             cuts.append(
                 {
                     "stage": stage,
-                    "coef_b": total_cost.loc[
-                        (
-                            (total_cost["stage"] == stage)
-                            & (total_cost["discretization"] == discretization)
-                        )
-                    ]
-                    .iloc[0]
-                    .total_cost,
+                    "coef_b": coef_b,
                     "coefs": hydro_avg.loc[
                         (
                             (hydro_avg["stage"] == stage)
-                            & (hydro_avg["discretization"] == discretization)
+                            & (hydro_avg["id"] == unique_id)
                         )
                     ]["wmc"].tolist(),
                 }
